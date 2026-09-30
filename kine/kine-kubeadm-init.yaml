@@ -1,0 +1,36 @@
+# partial snippet, not a full kubeadm config
+#
+apiVersion: kubeadm.k8s.io/v1beta4
+kind: InitConfiguration
+...
+skipPhases:
+  - addon/kube-proxy
+---
+kind: ClusterConfiguration
+apiVersion: kubeadm.k8s.io/v1beta4
+apiServer:
+  ...
+  extraVolumes:
+    - name: "enc"
+      hostPath: "/etc/kubernetes/enc"
+      mountPath: "/etc/kubernetes/enc"
+      pathType: DirectoryOrCreate
+      readOnly: true
+# kine adjustment start
+etcd:
+  external:
+    endpoints:
+      - "https://10.9.8.X:2379"
+    caFile: "/var/lib/kine/tls/kine-ca.crt"
+    certFile: "/var/lib/kine/tls/kine-client-1.crt"
+    keyFile: "/var/lib/kine/tls/kine-client-1.key"
+# kine adjustment end
+controlPlaneEndpoint: "10.9.8.2:6443"
+kubernetesVersion: v1.37.0
+networking:
+  ...
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+...
+

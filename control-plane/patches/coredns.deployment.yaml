@@ -1,0 +1,21 @@
+spec:
+  # uncomment for 1 vCPU control-plane because metrics-server which is 
+  # installed after coredns won't be scheduled due to insufficient cpu
+  #replicas: 1
+  template:
+    spec:
+      containers:
+      - name: coredns
+        # relaxed vs upstream (timeoutSeconds 5, periodSeconds 10,
+        # failureThreshold 5) for slow disks on SBC
+        livenessProbe:
+          failureThreshold: 15
+          httpGet:
+            path: /health
+            port: liveness-probe
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 15
+

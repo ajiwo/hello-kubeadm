@@ -1,0 +1,3 @@
+https://github.com/k3s-io/kine/issues/745
+https://github.com/k3s-io/docs/raw/f6d5b17d97e5160706ed56c405b6b17cf9d826af/docs/datastore/datastore.md
+

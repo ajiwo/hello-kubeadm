@@ -1,0 +1,21 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: common
+  namespace: kube-public
+spec:
+  gatewayClassName: cilium
+  listeners:
+    - hostname: 123.45.67.89.nip.io
+      name: whoami-http
+      port: 80
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchExpressions:
+            - key: kubernetes.io/metadata.name
+              operator: In
+              values:
+              - whoami

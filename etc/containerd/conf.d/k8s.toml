@@ -1,0 +1,8 @@
+# /etc/containerd/conf.d/k8s.toml
+[plugins]
+  [plugins.'io.containerd.cri.v1.runtime'.containerd.runtimes.runc.options]
+    SystemdCgroup = true
+  [plugins.'io.containerd.cri.v1.runtime'.cni]
+    bin_dirs = ['/usr/local/libexec/cni/bin']
+    conf_dir = '/usr/local/etc/cni/net.d'
+

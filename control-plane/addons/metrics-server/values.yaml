@@ -1,0 +1,18 @@
+apiService:
+  insecureSkipTLSVerify: false
+
+tls:
+  # Set the TLS method to use. Supported values:
+  # - `metrics-server` : Metrics-server will generate a self-signed certificate
+  # - `helm`           : Helm will generate a self-signed certificate
+  # - `cert-manager`   : Use cert-manager.io to create and maintain the certificate
+  # - `existingSecret` : Reuse an existing secret. No new secret will be created
+  type: "helm"
+
+# metrics-server is scheduled on the tainted control-plane so it is available
+# before any worker has joined
+tolerations:
+  - key: node-role.kubernetes.io/control-plane
+    operator: Exists
+    effect: NoSchedule
+

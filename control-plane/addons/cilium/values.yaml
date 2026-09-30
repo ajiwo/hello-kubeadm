@@ -1,0 +1,32 @@
+# default values: https://github.com/cilium/cilium/blob/v1.20.1/install/kubernetes/cilium/values.yaml
+cni:
+  binPath: /usr/local/libexec/cni/bin
+  confPath: /usr/local/etc/cni/net.d
+
+# device autodetection, only pin if it picks the wrong NIC
+#devices: eth0
+
+gatewayAPI:
+  enabled: true
+
+# keep equal to networking.podSubnet in ../../kubeadm-init.yaml
+ipam:
+  operator:
+    clusterPoolIPv4PodCIDRList:
+    - 10.30.0.0/16
+
+nodeIPAM:
+  enabled: true
+# nodeipam advertises node IPs; nodes labeled
+# node.kubernetes.io/exclude-from-external-load-balancers are skipped
+# (control-plane/exclude-lb.sh)
+defaultLBServiceIPAM: nodeipam
+
+k8sServiceHost: 10.9.8.2
+k8sServicePort: 6443
+kubeProxyReplacement: true
+
+# default is 2, other pods might get stuck if no worker joined
+operator:
+  replicas: 1
+

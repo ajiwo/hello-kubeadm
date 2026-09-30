@@ -1,0 +1,62 @@
+# kubeadm-config.yaml
+apiVersion: kubeadm.k8s.io/v1beta4
+kind: InitConfiguration
+localAPIEndpoint:
+  advertiseAddress: "10.9.8.2"
+  bindPort: 6443
+ 
+nodeRegistration:
+  name: instance-2
+  ## 1 vCPU control-plane
+  #ignorePreflightErrors: ["NumCPU"]
+
+skipPhases:
+  - addon/kube-proxy
+---
+kind: ClusterConfiguration
+apiVersion: kubeadm.k8s.io/v1beta4
+apiServer:
+  certSANs:
+    - "10.9.8.2"
+    - "instance-2"
+  extraArgs:
+    - name: "encryption-provider-config"
+      value: "/etc/kubernetes/enc/enc.yaml"
+    - name: "encryption-provider-config-automatic-reload"
+      value: "true"
+  extraVolumes:
+    - name: "enc"
+      hostPath: "/etc/kubernetes/enc"
+      mountPath: "/etc/kubernetes/enc"
+      pathType: DirectoryOrCreate
+      readOnly: true
+
+controlPlaneEndpoint: "10.9.8.2:6443"
+kubernetesVersion: v1.37.0
+
+networking:
+  dnsDomain: "cluster.local"
+  # keep equal to ipam.operator.clusterPoolIPv4PodCIDRList in addons/cilium/values.yaml
+  podSubnet: "10.30.0.0/16"
+  serviceSubnet: "10.40.0.0/14" # 10.40.0.1 - 10.43.255.254
+---
+kind: KubeletConfiguration
+apiVersion: kubelet.config.k8s.io/v1beta1
+cgroupDriver: systemd
+
+## Relaxed swap config: allow swap for processes outside kubernetes managed workloads
+#failSwapOn: false
+#memorySwap:
+#  swapBehavior: NoSwap
+
+rotateCertificates: true
+# needs rotateCertificates=true
+# if true
+# need to manually approve csr
+# kubectl get csr
+# kubectl certificate approve csr-xxxx
+serverTLSBootstrap: true
+
+## uncomment/adjust for system where /usr is readonly
+#volumePluginDir: "/usr/local/libexec/kubernetes/kubelet-plugins/volume/exec/"
+

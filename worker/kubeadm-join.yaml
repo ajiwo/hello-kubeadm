@@ -1,0 +1,17 @@
+apiVersion: kubeadm.k8s.io/v1beta4
+kind: JoinConfiguration
+nodeRegistration:
+  name: instance-x
+  kubeletExtraArgs:
+    - name: "node-ip"
+      value: "10.9.8.x"
+    # instance-4 only (externally reachable, faked ccm)
+    #- name: "cloud-provider"
+    #  value: "external"
+discovery:
+  bootstrapToken:
+    apiServerEndpoint: 10.9.8.2:6443
+    token: "xxxx.yyyyyyy"
+    caCertHashes:
+     - "sha256:zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
+

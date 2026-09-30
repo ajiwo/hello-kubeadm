@@ -1,0 +1,3 @@
+https://github.com/kubernetes/website/blob/a199ec8be7360da84d69687e9c16710f462194a2/content/en/docs/reference/config-api/kubeadm-config.v1beta4.md?plain=1
+https://github.com/kubernetes/website/blob/a199ec8be7360da84d69687e9c16710f462194a2/content/en/docs/reference/config-api/kubelet-config.v1beta1.md?plain=1#L464
+

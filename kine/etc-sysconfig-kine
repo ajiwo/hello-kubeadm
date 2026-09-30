@@ -1,0 +1,16 @@
+# /etc/sysconfig/kine
+
+KINE_LISTEN_ADDRESS=0.0.0.0:2379
+KINE_SERVER_CERT_FILE=/var/lib/kine/tls/kine-server-1.crt
+KINE_SERVER_KEY_FILE=/var/lib/kine/tls/kine-server-1.key
+KINE_TRUSTED_CA_FILE=/var/lib/kine/tls/kine-ca.crt
+
+# https://docs.k3s.io/datastore
+# postgres versions 15.12, 16.7, and 17.3
+KINE_ENDPOINT="postgresql://kine_user:kine_password@your-db-host:5432/kine_db?sslmode=verify-full"
+KINE_CA_FILE=/var/lib/kine/tls/pg-ca.crt
+
+# mysql versions 8.0 and 8.4
+# mariadb version 10.11, and 11.4
+#KINE_ENDPOINT="mysql://kine_user:kine_password@tcp(192.168.17.123:3306)/dbname"
+

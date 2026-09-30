@@ -1,0 +1,26 @@
+# auto-approve kubelet-serving CSRs, so kubelets with
+# serverTLSBootstrap=true get a cert signed by the cluster CA
+# (required for metrics-server to scrape them, see kubeadm-init.yaml)
+#
+# only the kubernetes.io/kubelet-serving signer is in scope: the chart's
+# ClusterRole is pinned to that resourceName, nothing else can be approved.
+
+# node hostnames allowed to request a serving cert
+providerRegex: '^instance-[2-7]$'
+
+# SAN IPs must fall inside these prefixes
+providerIpPrefixes:
+  - 10.9.8.0/27
+
+# node names are not resolvable via the host resolver the approver pod uses,
+# so skip the DNS lookup. approval is still gated on the regex and the
+# IP prefix above.
+bypassDnsResolution: true
+
+# leave a CSR that fails validation Pending instead of Denying it, so
+# kubelet-serving certs for nodes outside providerRegex stay approvable
+# by hand (kubectl certificate approve)
+skipDenyStep: true
+
+# one approver is enough until workers join
+replicas: 1
