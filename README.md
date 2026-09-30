@@ -286,11 +286,12 @@ kubectl apply -f example/whoami.yaml
 kubectl -n kube-public get gateway common   # address = 10.9.8.4
 ```
 
-the listener hostname is `123.45.67.89.nip.io` (made up ip address, use yours), matching the public address the
+the listener hostname is `203.0.113.10.nip.io` (203.0.113.0/24 is the TEST-NET-3
+documentation range, replace it with yours), matching the public address the
 VPS provider 1:1 NATs to instance-4's private address. hit it from the workstation:
 
 ```sh
-curl http://123.45.67.89.nip.io/
+curl http://203.0.113.10.nip.io/
 ```
 
 cleanup:

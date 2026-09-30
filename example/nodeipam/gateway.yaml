@@ -6,7 +6,7 @@ metadata:
 spec:
   gatewayClassName: cilium
   listeners:
-    - hostname: 123.45.67.89.nip.io
+    - hostname: 203.0.113.10.nip.io
       name: whoami-http
       port: 80
       protocol: HTTP

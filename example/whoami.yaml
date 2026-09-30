@@ -47,7 +47,7 @@ spec:
       namespace: kube-public
       sectionName: whoami-http
   hostnames:
-    - 123.45.67.89.nip.io
+    - 203.0.113.10.nip.io
   rules:
     - backendRefs:
         - kind: Service
