@@ -24,3 +24,14 @@ skipDenyStep: true
 
 # one approver is enough until workers join
 replicas: 1
+ 
+# lower resources for 1 vCPU
+#resources:
+#  requests:
+#    # default: 100m
+#    # observed: processing ~31m, idle ~8m
+#    cpu: "50m"
+#  limits:
+#    # default: 500m
+#    cpu: "100m"
+
