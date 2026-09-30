@@ -26,7 +26,7 @@ curl -sSLO "https://github.com/containerd/containerd/releases/download/${CONTAIN
 curl -sSLO "https://github.com/containerd/containerd/releases/download/${CONTAINERD_TAG}/containerd-${CONTAINERD_TAG#v}-linux-${ARCH}.tar.gz.sha256sum"
 sha256sum -c "containerd-${CONTAINERD_TAG#v}-linux-${ARCH}.tar.gz.sha256sum"
 tar -C "${DESTDIR}" -xzf "containerd-${CONTAINERD_TAG#v}-linux-${ARCH}.tar.gz"
-curl -sSLO https://github.com/containerd/containerd/raw/refs/heads/main/containerd.service
+curl -sSLO "https://github.com/containerd/containerd/raw/refs/tags/${CONTAINERD_TAG}/containerd.service"
 
 # cni-plugins: not needed. cilium ships its own cilium-cni + loopback
 # in its image and installs them via the install-cni-binaries init
