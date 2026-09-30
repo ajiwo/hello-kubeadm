@@ -82,7 +82,7 @@ the config files are in `etc/`.
 
 disable swap.
 
-disable firewall. if you know what you're doing, you can keep it enabled by opening the right ports and source/dest ranges.
+disable firewall. if you know what you're doing, you can keep it enabled by opening the right ports and source/dest ranges ([upstream source](https://github.com/kubernetes/website/raw/a199ec8be7360da84d69687e9c16710f462194a2/content/en/docs/reference/networking/ports-and-protocols.md)).
 
 set SELinux to permissive. effectively off, needed until kubelet SELinux support improves, since some CNI plugins need containers to reach the host filesystem. if you know what you're doing, you can leave it enforcing and do the labeling yourself ([upstream source](https://github.com/kubernetes/website/blob/a199ec8be7360da84d69687e9c16710f462194a2/content/en/docs/setup/production-environment/tools/kubeadm/install-kubeadm.md?plain=1#L279-L286)).
 
