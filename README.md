@@ -82,7 +82,14 @@ the config files are in `etc/`.
 
 disable swap.
 
-disable firewall. if you know what you're doing, you can keep it enabled by opening the right ports and source/dest ranges ([upstream source](https://github.com/kubernetes/website/raw/a199ec8be7360da84d69687e9c16710f462194a2/content/en/docs/reference/networking/ports-and-protocols.md)).
+if your VPS provider has a network security group (NSG), set it up before going further:
+allow 22/tcp from your own address, plus whatever ports you need yourself.
+nothing cluster-facing has to be open yet, the nodes only talk to each other over the private network.
+leave outbound unrestricted, image pulls need it.
+
+the NSG and the host firewall below are separate gates, a quiet drop can come from either.
+
+disable the host firewall. if you know what you're doing, you can keep it enabled by opening the right ports and source/dest ranges ([upstream source](https://github.com/kubernetes/website/raw/a199ec8be7360da84d69687e9c16710f462194a2/content/en/docs/reference/networking/ports-and-protocols.md)).
 
 set SELinux to permissive. effectively off, needed until kubelet SELinux support improves, since some CNI plugins need containers to reach the host filesystem. if you know what you're doing, you can leave it enforcing and do the labeling yourself ([upstream source](https://github.com/kubernetes/website/blob/a199ec8be7360da84d69687e9c16710f462194a2/content/en/docs/setup/production-environment/tools/kubeadm/install-kubeadm.md?plain=1#L279-L286)).
 
@@ -288,7 +295,11 @@ kubectl -n kube-public get gateway common   # address = 10.9.8.4
 
 the listener hostname is `203.0.113.10.nip.io` (203.0.113.0/24 is the TEST-NET-3
 documentation range, replace it with yours), matching the public address the
-VPS provider 1:1 NATs to instance-4's private address. hit it from the workstation:
+VPS provider 1:1 NATs to instance-4's private address.
+
+before this works from the workstation, the NSG needs 80/tcp inbound on instance-4's public address.
+allow it from your own public address first, widen it to anywhere once the path is proven.
+hit it from the workstation:
 
 ```sh
 curl http://203.0.113.10.nip.io/
