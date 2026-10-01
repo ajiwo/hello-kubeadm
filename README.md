@@ -288,7 +288,6 @@ and only instance-4 is externally reachable (the other nodes carry the
 
 ```sh
 kubectl apply -f example/nodeipam/gateway.yaml
-kubectl apply -f example/whoami.yaml
 
 kubectl -n kube-public get gateway common   # address = 10.9.8.4
 ```
@@ -302,8 +301,18 @@ allow it from your own public address first, widen it to anywhere once the path 
 hit it from the workstation:
 
 ```sh
+curl -v http://203.0.113.10.nip.io/
+```
+
+404. the gateway answers but no route matches yet.
+
+```sh
+kubectl apply -f example/whoami.yaml
+kubectl -n whoami wait --for=condition=Available deploy/hello --timeout=30s
 curl http://203.0.113.10.nip.io/
 ```
+
+now it returns the whoami response (hostname, client IP, request headers).
 
 cleanup:
 
