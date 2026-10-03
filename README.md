@@ -80,6 +80,8 @@ net.ipv4.ip_forward = 1
 
 the config files are in `etc/`.
 
+might need `kernel-modules-extra` on RHEL 10 ([rke2 docs](https://github.com/rancher/rke2-docs/blob/e93d38b0684d2e0e2bf654810a527c4b28df94a8/docs/install/requirements.md?plain=1#L35)).
+
 disable swap.
 
 if your VPS provider has a network security group (NSG), set it up before going further:
