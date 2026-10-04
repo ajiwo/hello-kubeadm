@@ -17,9 +17,5 @@ set -e
 # standard gateway-api v1.6.1 CRDs, cached locally
 kubectl apply -f gateway-crds.yaml
 
-cilium install --version 1.20.1 --values values.yaml 
-
-kubectl -n kube-system wait \
-  --for=jsonpath='{.status.phase}'=Running \
-  --timeout=5m pod --selector=app.kubernetes.io/name=cilium-agent
+cilium install --version 1.20.1 --values values.yaml --wait
 
