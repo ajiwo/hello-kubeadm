@@ -322,6 +322,50 @@ cleanup:
 kubectl delete -f example/nodeipam/gateway.yaml -f example/whoami.yaml
 ```
 
+### 4. optional: dedicated ingress node
+
+keeps application pods off instance-4, leaving it to the ingress path:
+the nodeipam address and `cilium-envoy`.
+
+with this, instance-3 gets relatively crowded: it is the only node left that takes
+untolerated pods, instance-2 stays tainted by kubeadm.
+ideally you want more than 3 nodes before dedicating one.
+
+```sh
+kubectl cordon instance-4
+kubectl taint node instance-4 dedicated=ingress:NoSchedule
+```
+
+either one alone has the same effect on scheduling.
+the ingress path does not depend on pods being schedulable there.
+
+re-run the gateway test from step 3 to confirm the path still works:
+
+```sh
+kubectl apply -f example/nodeipam/gateway.yaml -f example/whoami.yaml
+
+kubectl -n kube-public get gateway common   # address = 10.9.8.4, unchanged
+kubectl -n whoami wait --for=condition=Available deploy/hello --timeout=30s
+kubectl get pods -o wide --field-selector spec.nodeName=instance-4
+                                   # <- cilium daemonsets only
+curl http://203.0.113.10.nip.io/
+```
+
+the request still entered on instance-4 (10.9.8.4) and was answered by a pod on instance-3
+
+cleanup:
+
+```sh
+kubectl delete -f example/nodeipam/gateway.yaml -f example/whoami.yaml
+```
+
+undo:
+
+```sh
+kubectl taint node instance-4 dedicated=ingress:NoSchedule-
+kubectl uncordon instance-4
+```
+
 ## Enable services
 
 once everything went well, enable containerd and kubelet so they survive a reboot:
