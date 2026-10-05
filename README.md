@@ -1,6 +1,6 @@
 # hello-kubeadm
 
-kubernetes bootstrap using kubeadm on plain VMs or baremetals. more of a set of notes than a turnkey script.
+kubernetes bootstrap using kubeadm on plain VMs. notes and snippets, not a turnkey script.
 
 ## Ingredients
 
