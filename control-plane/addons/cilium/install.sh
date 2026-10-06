@@ -17,5 +17,5 @@ set -e
 # standard gateway-api v1.6.1 CRDs, cached locally
 kubectl apply -f gateway-crds.yaml
 
-cilium install --version 1.20.1 --values values.yaml --wait
+cilium install --version 1.20.2 --values values.yaml --wait
 

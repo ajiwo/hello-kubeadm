@@ -1,4 +1,4 @@
-# default values: https://github.com/cilium/cilium/blob/v1.20.1/install/kubernetes/cilium/values.yaml
+# default values: https://github.com/cilium/cilium/blob/v1.20.2/install/kubernetes/cilium/values.yaml
 cni:
   binPath: /usr/local/libexec/cni/bin
   confPath: /usr/local/etc/cni/net.d

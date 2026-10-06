@@ -6,12 +6,12 @@ kubernetes bootstrap using kubeadm on plain VMs. notes and snippets, not a turnk
 
 | Component | Version | Notes |
 |---|---|---|
-| kubeadm / kubelet / kubectl | v1.37.0 | |
-| containerd | v2.3.4 | runtime |
-| runc | v1.4.3 | |
-| crictl | v1.36.0 | |
+| kubeadm / kubelet / kubectl | v1.37.1 | |
+| containerd | v2.3.6 | runtime |
+| runc | v1.5.2 | |
+| crictl | v1.37.0 | |
 | Cilium CLI | v0.20.1 | installs Cilium |
-| Cilium | v1.20.1 | CNI, replaces kube-proxy |
+| Cilium | v1.20.2 | CNI, replaces kube-proxy |
 | Gateway API | v1.6.1 CRDs | standard profile via Cilium |
 | kubelet-csr-approver | v1.2.13 | Helm chart |
 | metrics-server | v3.14.0 | Helm chart |

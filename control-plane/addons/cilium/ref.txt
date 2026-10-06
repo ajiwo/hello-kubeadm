@@ -1,4 +1,4 @@
-https://github.com/cilium/cilium/blob/v1.20.1/Documentation/network/servicemesh/gateway-api/installation.rst
-https://github.com/cilium/cilium/blob/v1.20.1/Documentation/network/kubernetes/kubeproxy-free.rst
-https://github.com/cilium/cilium/blob/v1.20.1/Documentation/network/node-ipam.rst
+https://github.com/cilium/cilium/blob/v1.20.2/Documentation/network/servicemesh/gateway-api/installation.rst
+https://github.com/cilium/cilium/blob/v1.20.2/Documentation/network/kubernetes/kubeproxy-free.rst
+https://github.com/cilium/cilium/blob/v1.20.2/Documentation/network/node-ipam.rst
 
