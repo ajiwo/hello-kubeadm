@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: hello
-          image: traefik/whoami
+          image: traefik/whoami:v1.12.0
           ports:
             - containerPort: 80
 ---

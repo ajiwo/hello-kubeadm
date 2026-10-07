@@ -253,7 +253,7 @@ smoke tests, each a step closer to the real thing.
 kubectl reaches the API server and a pod image pulls:
 
 ```sh
-kubectl run --rm -it demo --restart=Never --image=busybox -- date
+kubectl run --rm -it demo --restart=Never --image=busybox:1.37.0 -- date
 ```
 
 ### 2. deployment + service
