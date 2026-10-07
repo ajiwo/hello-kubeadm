@@ -1,3 +1,3 @@
-https://github.com/kubernetes/website/blob/a199ec8be7360da84d69687e9c16710f462194a2/content/en/docs/reference/config-api/kubeadm-config.v1beta4.md?plain=1
-https://github.com/kubernetes/website/blob/a199ec8be7360da84d69687e9c16710f462194a2/content/en/docs/reference/config-api/kubelet-config.v1beta1.md?plain=1#L464
+https://github.com/kubernetes/website/blob/4172569f6a2f95e0f2da3bafc12b05720cb5c498/content/en/docs/reference/config-api/kubeadm-config.v1beta4.md?plain=1
+https://github.com/kubernetes/website/blob/4172569f6a2f95e0f2da3bafc12b05720cb5c498/content/en/docs/reference/config-api/kubelet-config.v1beta1.md?plain=1#L464
 

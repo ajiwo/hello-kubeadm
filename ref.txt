@@ -1,5 +1,5 @@
-https://github.com/kubernetes/website/blob/a199ec8be7360da84d69687e9c16710f462194a2/content/en/docs/setup/production-environment/tools/kubeadm/install-kubeadm.md
-https://github.com/kubernetes/website/blob/a199ec8be7360da84d69687e9c16710f462194a2/content/en/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm.md
-https://github.com/kubernetes/website/blob/a199ec8be7360da84d69687e9c16710f462194a2/content/en/docs/tasks/administer-cluster/kubeadm/kubeadm-certs.md
-https://github.com/kubernetes/website/blob/a199ec8be7360da84d69687e9c16710f462194a2/content/en/docs/tasks/administer-cluster/encrypt-data.md
+https://github.com/kubernetes/website/blob/4172569f6a2f95e0f2da3bafc12b05720cb5c498/content/en/docs/setup/production-environment/tools/kubeadm/install-kubeadm.md
+https://github.com/kubernetes/website/blob/4172569f6a2f95e0f2da3bafc12b05720cb5c498/content/en/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm.md
+https://github.com/kubernetes/website/blob/4172569f6a2f95e0f2da3bafc12b05720cb5c498/content/en/docs/tasks/administer-cluster/kubeadm/kubeadm-certs.md
+https://github.com/kubernetes/website/blob/4172569f6a2f95e0f2da3bafc12b05720cb5c498/content/en/docs/tasks/administer-cluster/encrypt-data.md
 

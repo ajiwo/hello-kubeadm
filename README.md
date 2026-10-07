@@ -91,9 +91,9 @@ leave outbound unrestricted, image pulls need it.
 
 the NSG and the host firewall below are separate gates, a quiet drop can come from either.
 
-disable the host firewall. if you know what you're doing, you can keep it enabled by opening the right ports and source/dest ranges ([upstream source](https://github.com/kubernetes/website/raw/a199ec8be7360da84d69687e9c16710f462194a2/content/en/docs/reference/networking/ports-and-protocols.md)).
+disable the host firewall. if you know what you're doing, you can keep it enabled by opening the right ports and source/dest ranges ([upstream source](https://github.com/kubernetes/website/raw/4172569f6a2f95e0f2da3bafc12b05720cb5c498/content/en/docs/reference/networking/ports-and-protocols.md)).
 
-set SELinux to permissive. effectively off, needed until kubelet SELinux support improves, since some CNI plugins need containers to reach the host filesystem. if you know what you're doing, you can leave it enforcing and do the labeling yourself ([upstream source](https://github.com/kubernetes/website/blob/a199ec8be7360da84d69687e9c16710f462194a2/content/en/docs/setup/production-environment/tools/kubeadm/install-kubeadm.md?plain=1#L279-L286)).
+set SELinux to permissive. effectively off, needed until kubelet SELinux support improves, since some CNI plugins need containers to reach the host filesystem. if you know what you're doing, you can leave it enforcing and do the labeling yourself ([upstream source](https://github.com/kubernetes/website/blob/4172569f6a2f95e0f2da3bafc12b05720cb5c498/content/en/docs/setup/production-environment/tools/kubeadm/install-kubeadm.md?plain=1#L279-L286)).
 
 ### 2. Download binaries
 
