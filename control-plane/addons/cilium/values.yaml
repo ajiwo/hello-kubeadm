@@ -9,7 +9,6 @@ cni:
 gatewayAPI:
   enabled: true
 
-# keep equal to networking.podSubnet in ../../kubeadm-init.yaml
 ipam:
   operator:
     clusterPoolIPv4PodCIDRList:

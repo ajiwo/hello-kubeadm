@@ -47,15 +47,15 @@ files with hardcoded values you'll need to change:
 
 | File | What to change |
 |---|---|
-| `control-plane/addons/cilium/values.yaml:16` | pod CIDR, must equal `kubeadm-init.yaml:40` |
-| `control-plane/addons/cilium/values.yaml:25-26` | `k8sServiceHost` / `k8sServicePort` API server |
+| `control-plane/addons/cilium/values.yaml:15` | pod CIDR |
+| `control-plane/addons/cilium/values.yaml:24-25` | `k8sServiceHost` / `k8sServicePort` API server |
 | `control-plane/addons/csr-approver/values.yaml:9` | `providerRegex` node hostname pattern |
 | `control-plane/addons/csr-approver/values.yaml:13` | `providerIpPrefixes` node subnet |
 | `control-plane/kubeadm-init.yaml:5` | `advertiseAddress` control-plane IP |
 | `control-plane/kubeadm-init.yaml:9` | `nodeRegistration.name` control-plane hostname |
 | `control-plane/kubeadm-init.yaml:20-21` | `certSANs` control-plane IP and hostname |
-| `control-plane/kubeadm-init.yaml:34` | `controlPlaneEndpoint` control-plane endpoint |
-| `control-plane/kubeadm-init.yaml:40-41` | `podSubnet` / `serviceSubnet`, `podSubnet` must equal `cilium/values.yaml:16` |
+| `control-plane/kubeadm-init.yaml:39` | `controlPlaneEndpoint` control-plane endpoint |
+| `control-plane/kubeadm-init.yaml:44` | `serviceSubnet` |
 | `control-plane/patches/coredns.configmap.yaml:17-19` | hosts block your node IPs and hostnames |
 | `download/download.sh:5` | set to `amd64` for `x86_64` |
 | `worker/kubeadm-join.yaml:4,7,9-10,14,16` | node name, IP, cloud-provider (instance-4 only), token, CA hash |

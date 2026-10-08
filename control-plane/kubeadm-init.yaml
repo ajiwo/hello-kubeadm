@@ -31,13 +31,16 @@ apiServer:
       pathType: DirectoryOrCreate
       readOnly: true
 
+controllerManager:
+  extraArgs:
+    - name: "allocate-node-cidrs"
+      value: "false"
+
 controlPlaneEndpoint: "10.9.8.2:6443"
 kubernetesVersion: v1.37.1
 
 networking:
   dnsDomain: "cluster.local"
-  # keep equal to ipam.operator.clusterPoolIPv4PodCIDRList in addons/cilium/values.yaml
-  podSubnet: "10.30.0.0/16"
   serviceSubnet: "10.40.0.0/14" # 10.40.0.1 - 10.43.255.254
 ---
 kind: KubeletConfiguration
