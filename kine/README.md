@@ -7,8 +7,8 @@ Optional: replace etcd with kine for a SQL-backed Kubernetes datastore.
 1. Download the binary:
 
 ```sh
-curl -LO https://github.com/k3s-io/kine/releases/download/v0.17.0/kine-arm64
-curl -LO https://github.com/k3s-io/kine/releases/download/v0.17.0/sha256sum-arm64.txt
+curl -LO https://github.com/k3s-io/kine/releases/download/v0.17.2/kine-arm64
+curl -LO https://github.com/k3s-io/kine/releases/download/v0.17.2/sha256sum-arm64.txt
 sha256sum -c sha256sum-arm64.txt
 chmod +x kine-arm64
 mv kine-arm64 /usr/local/bin/kine
