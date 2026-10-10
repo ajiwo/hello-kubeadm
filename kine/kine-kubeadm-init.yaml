@@ -1,4 +1,5 @@
-# partial snippet, not a full kubeadm config
+# ../control-plane/kubeadm-init.yaml
+# partial snippet, not a full kubeadm config, merge the etcd.external block
 #
 apiVersion: kubeadm.k8s.io/v1beta4
 kind: InitConfiguration
