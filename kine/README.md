@@ -6,6 +6,9 @@ Optional: replace etcd with kine for a SQL-backed Kubernetes datastore.
 
 1. Download the binary:
 
+if you'll want the `etcdctl` check further down, uncomment the etcd block in `download/download.sh`
+([lines 48-59](../download/download.sh#L48-L59)) and re-run the download before distributing `dist/`.
+
 ```sh
 curl -LO https://github.com/k3s-io/kine/releases/download/v0.17.2/kine-arm64
 curl -LO https://github.com/k3s-io/kine/releases/download/v0.17.2/sha256sum-arm64.txt
@@ -56,10 +59,28 @@ systemctl enable --now kine
 6. Point kubeadm at kine instead of local etcd:
 
 ```sh
-kubeadm init --config kubeadm-init.yaml ...
+kubeadm init --config kubeadm-init.yaml \
+  --ignore-preflight-errors=ExternalEtcdVersion
 ```
 
 the adjustment file overrides the `etcd.external` section to point at kine's endpoint with TLS.
+
+the flag is required. kubeadm's `ExternalEtcdVersion` preflight does an HTTP `GET <endpoint>/version`, but kine
+serves gRPC only on :2379 and has no `/version` handler since
+[f2d9e5d](https://github.com/k3s-io/kine/commit/f2d9e5d0c6a04604c5e0089df664adde21433de6), so the check fails with
+`Get "https://<host>:2379/version": EOF`. `--ignore-preflight-errors=ExternalEtcdVersion` demotes this to a
+warning ([source](https://github.com/kubernetes/kubernetes/blob/v1.37.1/cmd/kubeadm/app/preflight/checks.go#L760-L788));
+it does not affect kube-apiserver's gRPC access to kine.
+
+query the kine endpoint directly with the host-side `etcdctl` from the download step:
+
+```sh
+etcdctl --endpoints=https://10.9.8.2:2379 \
+  --cacert=/var/lib/kine/tls/kine-ca.crt \
+  --cert=/var/lib/kine/tls/kine-client-1.crt \
+  --key=/var/lib/kine/tls/kine-client-1.key \
+  endpoint status -w json
+```
 
 ## Supported databases
 
@@ -71,7 +92,9 @@ certified versions ([source](https://github.com/k3s-io/docs/raw/f6d5b17d97e51607
 - etcd 3.5.21
 
 **Watch out:**
-- Stick to the certified versions above, unsupported versions can cause compaction failures and other issues ([kine#745](https://github.com/k3s-io/kine/issues/745))
-- Connection poolers like PgBouncer need extra config for prepared statements
-- Multi-master setups (Galera, etc.) with `auto_increment_increment` > 1 are not supported, kine expects revisions to start at 0 and increment by exactly 1
+- init still prints `[WARNING ExternalEtcdVersion]: Get "...": EOF`. the flag demotes the error to a warning instead of suppressing it ([source](https://github.com/kubernetes/kubernetes/blob/v1.37.1/cmd/kubeadm/app/preflight/checks.go#L1212-L1216)). expected, not a second failure
+- the ignore is safe only while that check stays a version floor. if kubeadm adds real compatibility probing to it, drop the flag and re-read the reasoning above
+- stick to the certified versions above, unsupported versions can cause compaction failures and other issues ([kine#745](https://github.com/k3s-io/kine/issues/745))
+- connection poolers like PgBouncer need extra config for prepared statements
+- multi-master setups (Galera, etc.) with `auto_increment_increment` > 1 are not supported, kine expects revisions to start at 0 and increment by exactly 1
 

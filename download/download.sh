@@ -43,7 +43,8 @@ curl -sSLO "https://github.com/containerd/containerd/raw/refs/tags/${CONTAINERD_
 # 1.37), and etcdctl is already inside that image, so
 #   kubectl -n kube-system exec etcd-instance-2 -- etcdctl ...
 # covers testing/debugging. uncomment to get host-side etcd/etcdctl/
-# etcdutl in ${DESTDIR}/bin, e.g. to poke at /var/lib/etcd offline.
+# etcdutl in ${DESTDIR}/bin, e.g. to poke at /var/lib/etcd offline,
+# or to query the kine endpoint (see kine/README.md) with etcdctl.
 #ETCD_TAG="v3.7.0"
 #curl -sSLO "https://github.com/etcd-io/etcd/releases/download/${ETCD_TAG}/etcd-${ETCD_TAG}-linux-${ARCH}.tar.gz"
 #curl -sSLO "https://github.com/etcd-io/etcd/releases/download/${ETCD_TAG}/SHA256SUMS"
