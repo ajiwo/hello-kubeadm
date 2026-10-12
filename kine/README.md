@@ -6,16 +6,12 @@ Optional: replace etcd with kine for a SQL-backed Kubernetes datastore.
 
 1. Download the binary:
 
-if you'll want the `etcdctl` check further down, uncomment the etcd block in `download/download.sh`
-([lines 48-59](../download/download.sh#L48-L59)) and re-run the download before distributing `dist/`.
+uncomment the kine block in `download/download.sh`
+([lines 61-68](../download/download.sh#L61-L68)) and re-run the download before
+distributing `dist/`.
 
-```sh
-curl -LO https://github.com/k3s-io/kine/releases/download/v0.17.2/kine-arm64
-curl -LO https://github.com/k3s-io/kine/releases/download/v0.17.2/sha256sum-arm64.txt
-sha256sum -c sha256sum-arm64.txt
-chmod +x kine-arm64
-mv kine-arm64 /usr/local/bin/kine
-```
+if you'll want the `etcdctl` check further down, also uncomment the etcd block
+([lines 48-59](../download/download.sh#L48-L59)).
 
 2. Create the kine user and directories:
 

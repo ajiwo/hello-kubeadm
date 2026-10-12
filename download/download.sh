@@ -58,6 +58,15 @@ curl -sSLO "https://github.com/containerd/containerd/raw/refs/tags/${CONTAINERD_
 #     "etcd-${ETCD_TAG}-linux-${ARCH}/etcdutl"
 #chmod 755 "${DESTDIR}/bin/etcd" "${DESTDIR}/bin/etcdctl" "${DESTDIR}/bin/etcdutl"
 
+# kine: not needed by default. uncomment to get the kine binary in
+# ${DESTDIR}/bin, for a SQL-backed datastore instead of etcd
+# (see kine/README.md).
+#KINE_TAG="v0.17.2"
+#curl -sSLO "https://github.com/k3s-io/kine/releases/download/${KINE_TAG}/kine-${ARCH}"
+#curl -sSLO "https://github.com/k3s-io/kine/releases/download/${KINE_TAG}/sha256sum-${ARCH}.txt"
+#sha256sum -c "sha256sum-${ARCH}.txt"
+#install -m 755 "kine-${ARCH}" "${DESTDIR}/bin/kine"
+
 # crictl
 curl -sSLO "https://github.com/kubernetes-sigs/cri-tools/releases/download/${CRI_TOOLS_TAG}/crictl-${CRI_TOOLS_TAG}-linux-${ARCH}.tar.gz"
 curl -sSLO "https://github.com/kubernetes-sigs/cri-tools/releases/download/${CRI_TOOLS_TAG}/crictl-${CRI_TOOLS_TAG}-linux-${ARCH}.tar.gz.sha256"
