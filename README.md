@@ -16,6 +16,7 @@ kubernetes bootstrap using kubeadm on plain VMs. notes and snippets, not a turnk
 | kubelet-csr-approver | v1.2.13 | Helm chart |
 | metrics-server | v3.14.0 | Helm chart |
 | Helm | v4.2.3 | |
+| sonobuoy | v0.57.5 | conformance suite |
 
 All binaries land in `/usr/local`. the components above are never installed from distribution packages. the scripts still use
 ordinary host tools, to check:
@@ -103,7 +104,7 @@ on a machine with internet access:
 download/download.sh
 ```
 
-this pulls containerd, k8s binaries, Cilium CLI, Helm, crictl, and runc into `download/dist/`. checksums are verified. runc is gpg-verified instead.
+this pulls containerd, k8s binaries, Cilium CLI, Helm, crictl, runc, and sonobuoy into `download/dist/`. checksums are verified. runc is gpg-verified instead.
 
 `ARCH` is set to `arm64` on [line 5](download/download.sh#L5). change to `amd64` if needed.
 
@@ -364,6 +365,53 @@ undo:
 ```sh
 kubectl taint node instance-4 dedicated=ingress:NoSchedule-
 kubectl uncordon instance-4
+```
+
+### 5. conformance
+
+run the full Kubernetes conformance suite with sonobuoy before deploying production workloads.
+the run takes about 2 hours on this size of cluster
+
+```sh
+sonobuoy run --mode=certified-conformance
+```
+
+check in occasionally:
+
+```sh
+sonobuoy status
+sonobuoy logs
+```
+
+once complete, pull the results:
+
+```sh
+results=$(sonobuoy retrieve)
+sonobuoy results "$results"
+```
+
+the final summary looks like:
+
+```txt
+Plugin: e2e
+Status: passed
+Total: 3213
+Passed: 469
+Failed: 0
+Skipped: 2744
+
+Plugin: systemd-logs
+Status: passed
+Total: 3
+Passed: 3
+Failed: 0
+Skipped: 0
+```
+
+cleanup:
+
+```sh
+sonobuoy delete
 ```
 
 ## Enable services

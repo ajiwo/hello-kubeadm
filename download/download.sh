@@ -12,6 +12,7 @@ SCRIPT_TAG="v0.16.2"
 CILIUM_TAG="v0.20.1"
 HELM_TAG="v4.2.3"
 RUNC_TAG="v1.5.2"
+SONOBUOY_TAG="v0.57.5"
 
 cd "$(dirname "$0")"
 
@@ -111,6 +112,15 @@ gpg --home $tmpgpg --import runc.keyring
 gpg --home $tmpgpg --verify "runc.${ARCH}.asc" "runc.${ARCH}"
 install -m 755 "runc.${ARCH}" "${DESTDIR}/bin/runc"
 rm -rf $tmpgpg
+
+# sonobuoy
+curl -sSLO "https://github.com/vmware-tanzu/sonobuoy/releases/download/${SONOBUOY_TAG}/sonobuoy_${SONOBUOY_TAG#v}_linux_${ARCH}.tar.gz"
+curl -sSLO "https://github.com/vmware-tanzu/sonobuoy/releases/download/${SONOBUOY_TAG}/sonobuoy_${SONOBUOY_TAG#v}_checksums.txt"
+SONOSUM=$(mktemp)
+grep "sonobuoy_${SONOBUOY_TAG#v}_linux_${ARCH}.tar.gz\$" "sonobuoy_${SONOBUOY_TAG#v}_checksums.txt" > "$SONOSUM"
+sha256sum -c "$SONOSUM"
+rm -f "$SONOSUM"
+tar -C "${DESTDIR}/bin" -xzf "sonobuoy_${SONOBUOY_TAG#v}_linux_${ARCH}.tar.gz" sonobuoy
 
 # systemd service files
 curl -sSLO "https://raw.githubusercontent.com/kubernetes/release/${SCRIPT_TAG}/cmd/krel/templates/latest/kubelet/kubelet.service"
