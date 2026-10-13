@@ -42,6 +42,33 @@ intentionally hardcoded, adapt to your environment.
 
 Tested on openSUSE Leap Micro 6.2 and RHEL 10.
 
+### stable IP addresses
+
+node IP addresses must not change for the lifetime of the cluster. assign them statically,
+or with a DHCP reservation. a lease that can be reassigned is not enough.
+
+upstream only requires this for the control-plane endpoint, where kubeadm's
+`controlPlaneEndpoint` "sets a stable IP address or DNS name for the control plane"
+([upstream source](https://github.com/kubernetes/kubernetes/blob/v1.37.1/cmd/kubeadm/app/apis/kubeadm/v1beta4/types.go#L99)).
+node addresses are not covered by that wording. this setup needs them stable anyway:
+
+- the addresses are written into `control-plane/kubeadm-init.yaml`, `worker/kubeadm-join.yaml`,
+  `control-plane/addons/cilium/values.yaml` and the CoreDNS `hosts` block. a reassigned address
+  means editing all of them
+- kubeadm adds the control-plane address to the apiserver serving cert SANs and writes the
+  endpoint into every kubeconfig it generates. a moved control-plane IP surfaces as a cert
+  hostname mismatch rather than a clear error
+  ([SANs](https://github.com/kubernetes/kubernetes/blob/v1.37.1/cmd/kubeadm/app/phases/certs/doc.go#L25),
+  [kubeconfig](https://github.com/kubernetes/kubernetes/blob/v1.37.1/cmd/kubeadm/app/phases/kubeconfig/kubeconfig.go#L334)).
+- `InternalIP` is the address of record for a node. the control plane, the Service datapath
+  and Cilium's nodeipam all read it from the Node object instead of rediscovering the node.
+  kubelet rebuilds `status.addresses` on every sync, so on instance-2 and instance-3 the Node
+  object follows a renumbered host and only the files above go stale. instance-4 joins with
+  kubelet `cloud-provider=external`, where kubelet returns early once the addresses are set and
+  expects a cloud controller manager to take over. no CCM runs here, so its Node object stays
+  frozen on the old address
+  ([upstream source](https://github.com/kubernetes/kubernetes/blob/v1.37.1/pkg/kubelet/nodestatus/setters.go#L118-L125)).
+
 ## Adapting to your environment
 
 files with hardcoded values you'll need to change:
