@@ -396,7 +396,10 @@ kubectl uncordon instance-4
 
 ### 5. conformance
 
-run the full Kubernetes conformance suite with sonobuoy before deploying production workloads.
+runs the upstream e2e tests tagged `[Conformance]`, the subset CNCF requires for Certified Kubernetes.
+it verifies this cluster implements the documented Kubernetes API and behaviour for the stable feature set:
+API semantics, kubelet and node lifecycle, scheduling, the workload controllers, Service/DNS/pod networking,
+service accounts, and the volume types that need no CSI driver.
 the run takes about 2 hours on this size of cluster
 
 ```sh
