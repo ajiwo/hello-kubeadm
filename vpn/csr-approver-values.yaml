@@ -1,0 +1,12 @@
+# ../control-plane/addons/csr-approver/values.yaml
+# partial snippet, not a full values.yaml, do not use directly
+#
+... 
+
+# SAN IPs must fall inside these prefixes
+providerIpPrefixes:
+  - 10.9.8.0/27
+  - 10.11.12.14/32 # <-add this (instance-4's stable eth0 ExternalIP)
+
+...
+

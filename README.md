@@ -454,6 +454,23 @@ systemctl enable containerd kubelet
 
 on the control-plane plus every worker.
 
+## Optional
+
+more advanced overlays. each one changes part of the workflow above.
+
+### kine
+
+replaces the embedded etcd static pod with kine, a SQL-backed datastore. affects the
+binary download (step 2, uncomment the block in `download/download.sh`) and the init
+in step 4 (`--ignore-preflight-errors=ExternalEtcdVersion`). see [kine/README.md](kine/README.md).
+
+### vpn
+
+runs the cluster's node IPs on a routed wireguard interface (`wg0`) so nodes reach each
+other over the tunnel, for when the underlay can't carry cluster traffic directly. plain
+routing, not cilium's wireguard encryption. bring `wg0` up before kubeadm (step 1).
+see [vpn/README.md](vpn/README.md).
+
 ## References
 
 upstream docs this was built from: [ref.txt](ref.txt)
