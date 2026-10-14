@@ -309,7 +309,7 @@ kubectl delete -f example/demo.yaml
 
 ### 3. gateway API / whoami
 
-full path: ExternalIP -> Cilium LB -> Gateway -> HTTPRoute -> Service -> Pods. shows the cluster serving traffic from outside.
+full path: public IP -> Cilium LB -> Gateway -> HTTPRoute -> Service -> Pods. shows the cluster serving traffic from outside.
 
 cilium runs with nodeipam (`defaultLBServiceIPAM: nodeipam` in
 `control-plane/addons/cilium/values.yaml`): LoadBalancer services get node IPs,
