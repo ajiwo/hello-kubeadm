@@ -182,6 +182,8 @@ this does, roughly, in order:
 
 join token and CA cert hash are logged to `control-plane/kubeadm-init.log`, keep it secure.
 
+to run kubectl from your workstation, copy `/root/.kube/config` from the control-plane to `~/.kube/config` on your workstation (merge with any existing config if one is already there). install kubectl, cilium CLI, Helm, and sonobuoy there. the testing steps below assume a kubeconfig.
+
 kubelets run with `serverTLSBootstrap: true`, so their serving certs are issued
 through CSRs. kubelet-csr-approver watches and approves them, which is what lets
 metrics-server scrape kubelets. check it caught up:
