@@ -322,6 +322,11 @@ kubectl apply -f example/nodeipam/gateway.yaml
 kubectl -n kube-public get gateway common   # address = 10.9.8.4
 ```
 
+this does not happen instantly. if `get gateway common` shows no address yet, or
+a later step misbehaves, give it a moment and retry before digging. the
+under-the-hood wiring (nodeipam, cilium LB) takes time to settle, nothing is
+broken just because it hasn't shown up yet.
+
 the listener hostname is `203.0.113.10.nip.io` (203.0.113.0/24 is the TEST-NET-3
 documentation range, replace it with yours), matching the public address the
 VPS provider 1:1 NATs to instance-4's private address.
@@ -335,6 +340,9 @@ curl -v http://203.0.113.10.nip.io/
 ```
 
 404. the gateway answers but no route matches yet.
+
+if this doesn't return 404, investigate and fix before continuing, so a broken
+gateway path isn't mistaken for a broken whoami.
 
 ```sh
 kubectl apply -f example/whoami.yaml

@@ -188,32 +188,5 @@ added an ExternalIP to instance-4's node status, and nodeipam prefers ExternalIP
 instance-2 and instance-3 carry `node.kubernetes.io/exclude-from-external-load-balancers`,
 so instance-4 is the only node advertising, and its ExternalIP wins.
 
-this does not happen instantly. if `get gateway common` shows no address yet, or
-a later step misbehaves, give it a moment and retry before digging. the
-under-the-hood wiring (nodeipam, cilium LB) takes time to settle, nothing is
-broken just because it hasn't shown up yet.
-
-before adding a route, curl the public endpoint. it should answer with 404: the
-gateway answers but no route matches yet.
-
-```sh
-curl -v http://<your-public-address>/
-```
-
-if this doesn't return 404, investigate and fix before continuing, so a broken
-gateway path isn't mistaken for a broken whoami.
-
-full path, from the workstation:
-
-```sh
-kubectl apply -f example/whoami.yaml
-kubectl -n whoami wait --for=condition=Available deploy/hello --timeout=30s
-curl http://<your-public-address>/
-```
-
-cleanup:
-
-```sh
-kubectl delete -f example/nodeipam/gateway.yaml -f example/whoami.yaml
-```
-
+for timing, 404 check, whoami test and cleanup, follow "3. gateway API / whoami"
+in the main README.
