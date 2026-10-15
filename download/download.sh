@@ -6,7 +6,6 @@ ARCH="arm64"
 
 # version pins
 CONTAINERD_TAG="v2.3.6"
-CRI_TOOLS_TAG="v1.37.0"
 K8S_TAG="v1.37.1"
 SCRIPT_TAG="v0.16.2"
 CILIUM_TAG="v0.20.1"
@@ -68,14 +67,18 @@ curl -sSLO "https://github.com/containerd/containerd/raw/refs/tags/${CONTAINERD_
 #sha256sum -c "sha256sum-${ARCH}.txt"
 #install -m 755 "kine-${ARCH}" "${DESTDIR}/bin/kine"
 
-# crictl
-curl -sSLO "https://github.com/kubernetes-sigs/cri-tools/releases/download/${CRI_TOOLS_TAG}/crictl-${CRI_TOOLS_TAG}-linux-${ARCH}.tar.gz"
-curl -sSLO "https://github.com/kubernetes-sigs/cri-tools/releases/download/${CRI_TOOLS_TAG}/crictl-${CRI_TOOLS_TAG}-linux-${ARCH}.tar.gz.sha256"
-CRICTLSUM=$(mktemp)
-echo "$(cat "crictl-${CRI_TOOLS_TAG}-linux-${ARCH}.tar.gz.sha256")  crictl-${CRI_TOOLS_TAG}-linux-${ARCH}.tar.gz" > "$CRICTLSUM"
-sha256sum -c "$CRICTLSUM"
-rm -f "$CRICTLSUM"
-tar -C "${DESTDIR}/bin" -xzf "crictl-${CRI_TOOLS_TAG}-linux-${ARCH}.tar.gz"
+# crictl: not needed by default. containerd's CRI is reached through
+# kubectl, cilium and crictl is only pulled out for advanced debugging
+# (listing pods/containers, exec, logs when the kubelet side tells you
+# nothing). uncomment to get crictl in ${DESTDIR}/bin.
+#CRI_TOOLS_TAG="v1.37.0"
+#curl -sSLO "https://github.com/kubernetes-sigs/cri-tools/releases/download/${CRI_TOOLS_TAG}/crictl-${CRI_TOOLS_TAG}-linux-${ARCH}.tar.gz"
+#curl -sSLO "https://github.com/kubernetes-sigs/cri-tools/releases/download/${CRI_TOOLS_TAG}/crictl-${CRI_TOOLS_TAG}-linux-${ARCH}.tar.gz.sha256"
+#CRICTLSUM=$(mktemp)
+#echo "$(cat "crictl-${CRI_TOOLS_TAG}-linux-${ARCH}.tar.gz.sha256")  crictl-${CRI_TOOLS_TAG}-linux-${ARCH}.tar.gz" > "$CRICTLSUM"
+#sha256sum -c "$CRICTLSUM"
+#rm -f "$CRICTLSUM"
+#tar -C "${DESTDIR}/bin" -xzf "crictl-${CRI_TOOLS_TAG}-linux-${ARCH}.tar.gz"
 
 # k8s binaries (kubeadm, kubelet, kubectl)
 curl -sSL --remote-name-all "https://dl.k8s.io/release/${K8S_TAG}/bin/linux/${ARCH}/{kubeadm,kubelet,kubectl}"

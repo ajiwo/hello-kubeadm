@@ -9,7 +9,6 @@ kubernetes bootstrap using kubeadm on plain VMs. notes and snippets, not a turnk
 | kubeadm / kubelet / kubectl | v1.37.1 | |
 | containerd | v2.3.6 | runtime |
 | runc | v1.5.2 | |
-| crictl | v1.37.0 | |
 | Cilium CLI | v0.20.1 | installs Cilium |
 | Cilium | v1.20.2 | CNI, replaces kube-proxy |
 | Gateway API | v1.6.1 CRDs | standard profile via Cilium |
@@ -131,7 +130,7 @@ on a machine with internet access:
 download/download.sh
 ```
 
-this pulls containerd, k8s binaries, Cilium CLI, Helm, crictl, runc, and sonobuoy into `download/dist/`. checksums are verified. runc is gpg-verified instead.
+this pulls containerd, k8s binaries, Cilium CLI, Helm, runc, and sonobuoy into `download/dist/`. checksums are verified. runc is gpg-verified instead.
 
 `ARCH` is set to `arm64` on [line 5](download/download.sh#L5). change to `amd64` if needed.
 
