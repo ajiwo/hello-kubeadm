@@ -84,7 +84,7 @@ files with hardcoded values you'll need to change:
 | `control-plane/kubeadm-init.yaml:20-21` | `certSANs` control-plane IP and hostname |
 | `control-plane/kubeadm-init.yaml:39` | `controlPlaneEndpoint` control-plane endpoint |
 | `control-plane/kubeadm-init.yaml:44` | `serviceSubnet` |
-| `control-plane/patches/coredns.configmap.yaml:17-19` | hosts block your node IPs and hostnames |
+| `control-plane/patches/coredns.configmap.yaml:19-21` | hosts block your node IPs and hostnames |
 | `download/download.sh:5` | set to `amd64` for `x86_64` |
 | `worker/kubeadm-join.yaml:4,7,9-10,14,16` | node name, IP, cloud-provider (instance-4 only), token, CA hash |
 
