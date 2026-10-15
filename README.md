@@ -4,18 +4,19 @@ kubernetes bootstrap using kubeadm on plain VMs. notes and snippets, not a turnk
 
 ## Ingredients
 
-| Component | Version | Notes |
-|---|---|---|
-| kubeadm / kubelet / kubectl | v1.37.1 | |
-| containerd | v2.3.6 | runtime |
-| runc | v1.5.2 | |
-| Cilium CLI | v0.20.1 | installs Cilium |
-| Cilium | v1.20.2 | CNI, replaces kube-proxy |
-| Gateway API | v1.6.1 CRDs | standard profile via Cilium |
-| kubelet-csr-approver | v1.2.13 | Helm chart |
-| metrics-server | v3.14.0 | Helm chart |
-| Helm | v4.2.3 | |
-| sonobuoy | v0.57.5 | conformance suite |
+| Component | Version | Installs on | Notes |
+|---|---|---|---|
+| kubeadm / kubelet | v1.37.1 | control-plane + worker | |
+| kubectl | v1.37.1 | control-plane | client binary |
+| containerd | v2.3.6 | control-plane + worker | runtime |
+| runc | v1.5.2 | control-plane + worker | |
+| Cilium CLI | v0.20.1 | control-plane | installs Cilium |
+| Cilium | v1.20.2 | control-plane + worker | CNI, replaces kube-proxy |
+| Gateway API | v1.6.1 CRDs | | standard profile via Cilium |
+| kubelet-csr-approver | v1.2.13 | | Helm chart |
+| metrics-server | v3.14.0 | | Helm chart |
+| Helm | v4.2.3 | control-plane | |
+| sonobuoy | v0.57.5 | control-plane | conformance suite |
 
 All binaries land in `/usr/local`. the components above are never installed from distribution packages. the scripts still use
 ordinary host tools, to check:
