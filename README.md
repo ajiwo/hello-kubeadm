@@ -480,6 +480,13 @@ other over the tunnel, for when the underlay can't carry cluster traffic directl
 routing, not cilium's wireguard encryption. bring `wg0` up before kubeadm (step 1).
 see [vpn/README.md](vpn/README.md).
 
+### ha
+
+runs several control-planes behind an external load balancer, for a redundant apiserver
+and etcd. the load balancer itself is out of scope. changes the init in step 4
+(`controlPlaneEndpoint`), the join in step 5 (additional control-planes, not workers) and
+the cilium values. see [ha/README.md](ha/README.md).
+
 ## References
 
 upstream docs this was built from: [ref.txt](ref.txt)

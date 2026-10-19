@@ -1,0 +1,19 @@
+# ../control-plane/kubeadm-init.yaml
+# partial snippet, not a full kubeadm config, merge these values
+#
+apiVersion: kubeadm.k8s.io/v1beta4
+kind: InitConfiguration
+...
+---
+kind: ClusterConfiguration
+apiVersion: kubeadm.k8s.io/v1beta4
+apiServer:
+  ...
+# the load balancer name and port, kubeadm writes it into every kubeconfig it
+# generates so workers and kubelets follow the same endpoint
+controlPlaneEndpoint: "kapisrv.lb.example.com:6443"
+...
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+...

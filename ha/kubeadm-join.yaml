@@ -1,0 +1,22 @@
+# additional control-plane nodes only, workers use ../worker/kubeadm-join.yaml
+# this is the worker shape plus the controlPlane block
+apiVersion: kubeadm.k8s.io/v1beta4
+kind: JoinConfiguration
+nodeRegistration:
+  name: instance-x
+  kubeletExtraArgs:
+    - name: "node-ip"
+      value: "10.9.8.x"
+controlPlane:
+  # decryption key for the certs the first control-plane uploaded, from its
+  # kubeadm-init.log (control-plane/init.sh passes --upload-certs)
+  certificateKey: "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+  localAPIEndpoint:
+    advertiseAddress: "10.9.8.x"
+    bindPort: 6443
+discovery:
+  bootstrapToken:
+    apiServerEndpoint: kapisrv.lb.example.com:6443
+    token: "xxxx.yyyyyyy"
+    caCertHashes:
+     - "sha256:zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"

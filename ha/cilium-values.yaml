@@ -1,0 +1,11 @@
+# ../control-plane/addons/cilium/values.yaml
+# partial snippet, not a full values.yaml, do not use directly
+#
+...
+
+# the load balancer, so the agent reaches the apiserver when one control-plane
+# is down, instead of the single node IP the main path pins
+k8sServiceHost: kapisrv.lb.example.com
+k8sServicePort: 6443
+
+...
