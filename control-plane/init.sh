@@ -14,7 +14,7 @@ systemctl start kubelet.service
 
 : > "$DIR/kubeadm-init.log"
 chmod 600 "$DIR/kubeadm-init.log"
-kubeadm init --config "$DIR/kubeadm-init.yaml" 2>&1 | tee "$DIR/kubeadm-init.log"
+kubeadm init --config "$DIR/kubeadm-init.yaml" --upload-certs 2>&1 | tee "$DIR/kubeadm-init.log"
 
 mkdir -p /root/.kube
 cp -av /etc/kubernetes/admin.conf /root/.kube/config
