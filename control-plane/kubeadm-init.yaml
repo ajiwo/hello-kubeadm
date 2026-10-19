@@ -16,9 +16,6 @@ skipPhases:
 kind: ClusterConfiguration
 apiVersion: kubeadm.k8s.io/v1beta4
 apiServer:
-  certSANs:
-    - "10.9.8.2"
-    - "instance-2"
   extraArgs:
     - name: "encryption-provider-config"
       value: "/etc/kubernetes/enc/enc.yaml"
