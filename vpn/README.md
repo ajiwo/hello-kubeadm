@@ -124,7 +124,7 @@ same as the main README, then patch instance-4's ExternalIP so nodeipam
 advertises its reachable `eth0` address instead of the `wg0` node IP:
 
 ```sh
-control-plane/exclude-lb.sh instance-2 instance-3
+control-plane/exclude-lb.sh instance-3
 control-plane/untaint-lb-worker.sh instance-4
 control-plane/patch-address.sh instance-4 10.11.12.14  # <-extra step here
 ```

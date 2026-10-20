@@ -230,12 +230,15 @@ this starts containerd + kubelet and runs `kubeadm join`.
 on the control-plane, after the workers joined:
 
 ```sh
-control-plane/exclude-lb.sh instance-2 instance-3
+control-plane/exclude-lb.sh instance-3
 control-plane/untaint-lb-worker.sh instance-4
 ```
 
-`exclude-lb.sh` labels the nodes that are not externally reachable, so cilium
-nodeipam only advertises instance-4's IP for LoadBalancer services.
+kubeadm already labels instance-2 `node.kubernetes.io/exclude-from-external-load-balancers`
+during the `mark-control-plane` phase
+([source](https://github.com/kubernetes/kubernetes/blob/v1.37.1/cmd/kubeadm/app/phases/markcontrolplane/markcontrolplane.go#L30-L33)).
+`exclude-lb.sh` applies the same label to the workers that are not externally reachable,
+so cilium nodeipam only advertises instance-4's IP for LoadBalancer services.
 
 `untaint-lb-worker.sh` removes the `node.cloudprovider.kubernetes.io/uninitialized`
 taint from instance-4. instance-4 joins with kubelet `cloud-provider=external`
@@ -314,7 +317,7 @@ full path: public IP -> Cilium LB -> Gateway -> HTTPRoute -> Service -> Pods. sh
 
 cilium runs with nodeipam (`defaultLBServiceIPAM: nodeipam` in
 `control-plane/addons/cilium/values.yaml`): LoadBalancer services get node IPs,
-and only instance-4 is externally reachable (the other nodes carry the
+and only instance-4 is externally reachable (instance-2 and instance-3 carry the
 `node.kubernetes.io/exclude-from-external-load-balancers` label, see step 6).
 
 ```sh
