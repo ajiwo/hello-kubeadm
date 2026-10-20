@@ -52,7 +52,10 @@ first control-plane can init and the rest can join one that is already up:
 | instance-2 | `10.9.8.2 kapisrv.lb.example.com` | before init, points at itself |
 | instance-5 | `10.9.8.2 kapisrv.lb.example.com` | joins the first control-plane |
 | instance-6 | `10.9.8.5 kapisrv.lb.example.com` | joins the second control-plane |
-| instance-3, instance-4 | `10.9.8.2 kapisrv.lb.example.com` | whichever control-plane is up |
+| instance-3, instance-4 | `10.9.8.6 kapisrv.lb.example.com` | joins the last control-plane |
+
+the table assumes workers join last, after instance-6 is up. if you join them
+earlier, point them at whichever control-plane is already up.
 
 `init.sh` runs kubectl against the endpoint right after init, so the entry has to be in
 place before it starts.
