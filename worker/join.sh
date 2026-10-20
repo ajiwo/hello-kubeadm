@@ -17,7 +17,3 @@ systemctl start kubelet.service
 
 kubeadm join --config "$(dirname "$0")/kubeadm-join.yaml"
 
-# can enable containerd and kubelet services once everything went well
-#systemctl enable containerd.service
-#systemctl enable kubelet.service
-
