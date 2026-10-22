@@ -38,11 +38,12 @@ control-plane count odd, etcd needs a majority to make progress.
 
 ### the load balancer name
 
-`kapisrv.lb.example.com` stands in for the load balancer address. kubeadm wants a name
-here rather than a bare address
-([source](https://github.com/kubernetes/website/blob/4172569f6a2f95e0f2da3bafc12b05720cb5c498/content/en/docs/setup/production-environment/tools/kubeadm/high-availability.md?plain=1#L125-L143)),
-and writes it into every kubeconfig it generates, so workers and kubelets follow the same
-endpoint.
+`kapisrv.lb.example.com` stands in for the load balancer address. this setup needs a name
+here: the step below resolves it per node.
+upstream docs on the kube-apiserver load balancer
+([source](https://github.com/kubernetes/website/blob/4172569f6a2f95e0f2da3bafc12b05720cb5c498/content/en/docs/setup/production-environment/tools/kubeadm/high-availability.md?plain=1#L125-L143)).
+kubeadm writes it into every kubeconfig it generates, so workers and kubelets follow the
+same endpoint.
 
 you do not need the load balancer yet. fake the name in `/etc/hosts` on each node so the
 first control-plane can init and the rest can join one that is already up:
