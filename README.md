@@ -490,6 +490,11 @@ and etcd. the load balancer itself is out of scope. changes the init in step 4
 (`controlPlaneEndpoint`), the join in step 5 (additional control-planes, not workers) and
 the cilium values. see [ha/README.md](ha/README.md).
 
+### images
+
+preloads container images on the nodes so `kubeadm init` and `kubeadm join` don't pull
+them from the internet. see [images/README.md](images/README.md).
+
 ## References
 
 upstream docs this was built from: [ref.txt](ref.txt)
