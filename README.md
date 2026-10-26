@@ -127,6 +127,8 @@ set SELinux to permissive. effectively off, needed until kubelet SELinux support
 on a machine with internet access:
 
 ```sh
+git clone https://github.com/ajiwo/hello-kubeadm
+cd hello-kubeadm
 download/download.sh
 ```
 
@@ -136,28 +138,28 @@ this pulls containerd, k8s binaries, Cilium CLI, Helm, runc, and sonobuoy into `
 
 ### 3. Distribute files to nodes
 
-copy `download/dist/` contents to each node:
+copy the repo to each node, leaving the raw downloads behind:
 
-```txt
-download/dist/
-  usr/local/bin/             -> /usr/local/bin/
-  usr/local/libexec/cni/bin/ -> /usr/local/libexec/cni/bin/
-  etc/systemd/system/        -> /etc/systemd/system/
-    containerd.service
-    kubelet.service
-    kubelet.service.d/
-      10-kubeadm.conf
+```sh
+for node in instance-2 instance-3 instance-4; do
+  rsync -a --exclude download/tmp ./ "root@$node:/root/hello-kubeadm/"
+done
 ```
 
-also copy the kernel module, sysctl, and containerd configs:
+`download/tmp` holds the downloaded archives. the nodes use the unpacked tree in `download/dist/`, which travels with the copy. needs rsync on the download machine.
 
-```txt
-etc/modules-load.d/90-k8s.conf -> /etc/modules-load.d/90-k8s.conf
-etc/sysctl.d/90-k8s.conf       -> /etc/sysctl.d/90-k8s.conf
-etc/containerd/conf.d/k8s.toml -> /etc/containerd/conf.d/k8s.toml
+run the rest on each node from `/root/hello-kubeadm`. install the binaries, systemd units, and configs:
+
+```sh
+cp -a download/dist/usr/local/. /usr/local/
+cp -a download/dist/etc/systemd/system/. /etc/systemd/system/
+cp -a etc/. /etc/
+systemctl daemon-reload
 ```
 
-on each node, run `systemctl daemon-reload` after copying service files.
+this puts the binaries in `/usr/local/bin/` and `/usr/local/libexec/cni/bin/`, the kubelet and containerd units in `/etc/systemd/system/`, and the module, sysctl, and containerd configs under `/etc/`.
+
+edit the per-node files before init or join, see "Adapting to your environment".
 
 ### 4. Init the control-plane
 
@@ -201,7 +203,7 @@ kubectl certificate approve <csr-name>
 
 ### 5. Join worker nodes
 
-for each worker, edit `worker/kubeadm-join.yaml`:
+on each worker, edit `worker/kubeadm-join.yaml`:
 
 ```yaml
 nodeRegistration:
@@ -217,7 +219,7 @@ discovery:
      - "sha256:zzzzzzzzzzzzzzzzzzzzzzzz..."  # <- from kubeadm-init.log
 ```
 
-copy the edited file to the worker, then:
+then:
 
 ```sh
 worker/join.sh
