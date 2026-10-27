@@ -492,8 +492,8 @@ the cilium values. see [ha/README.md](ha/README.md).
 
 ### images
 
-preloads container images on the nodes so `kubeadm init` and `kubeadm join` don't pull
-them from the internet. see [images/README.md](images/README.md).
+preloads container images and helm charts on the nodes so `kubeadm init` and `kubeadm
+join` don't pull them from the internet. see [images/README.md](images/README.md).
 
 ## References
 

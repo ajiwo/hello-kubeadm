@@ -1,14 +1,17 @@
 # images
 
-optional. preloads container images on the nodes so `kubeadm init` and `kubeadm
-join` skip internet pulls. images not preloaded still pull from their registry
-as usual.
+optional. preloads container images and helm charts on the nodes so `kubeadm init`
+and `kubeadm join` skip internet pulls. images not preloaded still pull from their
+registry as usual, charts not downloaded still pull from their repository.
 
 two examples, repeat the save/load pair for every other image.
 
 ## prerequisites
 
 - `skopeo` on the saving machine. not needed on the nodes.
+- `helm` on the saving machine, for the chart pulls. the `dist/` copy (step 2)
+  is built for the node arch. a different saving machine arch needs its own
+  `helm` binary.
 - `ctr` on the nodes. ships with containerd (step 2).
 - archive arch must match node arch. examples use `arm64`, matching
   `download/download.sh`; use `amd64` if changed there.
@@ -127,4 +130,44 @@ of the tag then works through the generic pair
 control-plane set (minus kube-proxy, skipped here). addons add their own:
 cilium, metrics-server, kubelet-csr-approver. workers need the images their pods
 run, at least `pause` for the sandbox and the cilium agent.
+
+## helm charts
+
+`init.sh` installs the kubelet-csr-approver and metrics-server addons with
+helm, which fetches each chart from its repository. same offline story as the
+images: download the charts on the machine with internet access, install from
+the tarballs.
+
+on a machine with internet access, in the `download/` directory:
+
+```sh
+rm -rf charts
+mkdir -p charts
+
+helm pull metrics-server --repo https://kubernetes-sigs.github.io/metrics-server/ \
+  --version 3.14.0 --destination charts
+helm pull kubelet-csr-approver --repo https://postfinance.github.io/kubelet-csr-approver \
+  --version 1.2.13 --destination charts
+```
+
+add `charts` to `download/.gitignore` so the tarballs stay out of the repo.
+
+the addon install scripts drop the `helm repo add` line and point at the
+tarball. in `control-plane/addons/csr-approver/install.sh`:
+
+```sh
+helm --namespace kube-system upgrade \
+  --install kubelet-csr-approver ../../../download/charts/kubelet-csr-approver-1.2.13.tgz \
+  --values values.yaml \
+  --wait
+```
+
+in `control-plane/addons/metrics-server/install.sh`:
+
+```sh
+helm --namespace kube-system upgrade \
+  --install metrics-server ../../../download/charts/metrics-server-3.14.0.tgz \
+  --values values.yaml \
+  --wait
+```
 
