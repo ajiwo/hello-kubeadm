@@ -4,6 +4,8 @@ optional. preload container images and helm charts on the nodes so `kubeadm init
 and `kubeadm join` skip internet pulls. images not preloaded still pull from their
 registry as usual, charts not downloaded still pull from their repository.
 
+if you run a private, offline, or caching registry the nodes can reach, skip this overlay
+
 two examples, repeat the save/load pair for every other image.
 
 ## prerequisites
