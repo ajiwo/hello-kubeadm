@@ -1,6 +1,6 @@
 # images
 
-optional. preloads container images and helm charts on the nodes so `kubeadm init`
+optional. preload container images and helm charts on the nodes so `kubeadm init`
 and `kubeadm join` skip internet pulls. images not preloaded still pull from their
 registry as usual, charts not downloaded still pull from their repository.
 
@@ -9,9 +9,7 @@ two examples, repeat the save/load pair for every other image.
 ## prerequisites
 
 - `skopeo` on the saving machine. not needed on the nodes.
-- `helm` on the saving machine, for the chart pulls. the `dist/` copy (step 2)
-  is built for the node arch. a different saving machine arch needs its own
-  `helm` binary.
+- `helm` on the saving machine, for the chart pulls.
 - `ctr` on the nodes. ships with containerd (step 2).
 - archive arch must match node arch. examples use `arm64`, matching
   `download/download.sh`; use `amd64` if changed there.
@@ -23,13 +21,11 @@ on a machine with internet access:
 ```sh
 skopeo copy --override-os linux --override-arch arm64 \
   docker://registry.k8s.io/kube-apiserver:v1.37.1 \
-  docker-archive:registry.k8s.io_kube-apiserver_v1.37.1.tar:registry.k8s.io/kube-apiserver:v1.37.1
+  docker-archive:images/dist/registry.k8s.io_kube-apiserver_v1.37.1.tar:registry.k8s.io/kube-apiserver:v1.37.1
 ```
 
 value after the second colon = image name stored in the archive. keep identical
 to the reference the cluster requests, or load creates an image nobody looks up.
-
-copy the `.tar` to the node, e.g. `/root/images/`. keep archives out of the repo.
 
 ## load
 
@@ -39,13 +35,8 @@ or `worker/join.sh` (step 5):
 ```sh
 systemctl start containerd
 ctr -n k8s.io images import --platform linux/arm64 \
-  /root/images/registry.k8s.io_kube-apiserver_v1.37.1.tar
+  images/dist/registry.k8s.io_kube-apiserver_v1.37.1.tar
 ```
-
-- `-n k8s.io` = namespace kubelet and kubeadm read. an image in any other
-  namespace is invisible to them and pulls anyway.
-- `init.sh` and `join.sh` start containerd themselves, so starting it here first
-  is safe.
 
 check it landed:
 
@@ -81,13 +72,13 @@ tag=v1.38.6-1791537840-00e749f11f69334c625e53fc1ce2fc6c7f34a51f
 
 skopeo copy --override-os linux --override-arch arm64 \
   "docker://$ref:$tag" \
-  "oci-archive:cilium-envoy.oci.tar:$ref:$tag"
+  "oci-archive:images/dist/cilium-envoy.oci.tar:$ref:$tag"
 ```
 
 the reference after the archive name is the image name stored in the archive.
 import creates it as a tag.
 
-copy `cilium-envoy.oci.tar` to `/root/images/` on every node, then as root:
+on each node, as root, run from `/root/hello-kubeadm`:
 
 ```sh
 ref=quay.io/cilium/cilium-envoy
@@ -96,7 +87,7 @@ digest=sha256:d6c8c0c91954d1885026d82a31b341f37dcd34a4b127fdaf1587e43ddd224cef
 
 systemctl start containerd
 ctr -n k8s.io images import --platform linux/arm64 \
-  --base-name "$ref" /root/images/cilium-envoy.oci.tar
+  --base-name "$ref" images/dist/cilium-envoy.oci.tar
 
 ctr -n k8s.io images tag --local --force "$ref:$tag" "$ref@$digest"
 # optional: drop the tag reference, only the digest entry is needed
@@ -131,6 +122,17 @@ control-plane set (minus kube-proxy, skipped here). addons add their own:
 cilium, metrics-server, kubelet-csr-approver. workers need the images their pods
 run, at least `pause` for the sandbox and the cilium agent.
 
+`kubeadm config images list --kubernetes-version v1.37.1` prints the core
+preload set (minus kube-proxy, skipped here).
+
+`ctr -n k8s.io i ls` on an initialized node shows what actually landed,
+including digest-pinned cilium images (`sha256:` lines) and any example
+or test images deployed. filter to name:tag references:
+
+```sh
+ctr -n k8s.io i ls -q | grep -v '^sha256:'
+```
+
 ## helm charts
 
 `init.sh` installs the kubelet-csr-approver and metrics-server addons with
@@ -141,6 +143,10 @@ the tarballs.
 on a machine with internet access, in the `download/` directory:
 
 ```sh
+# pwd
+# /root/hello-kubeadm
+
+cd download
 rm -rf charts
 mkdir -p charts
 
@@ -150,21 +156,24 @@ helm pull kubelet-csr-approver --repo https://postfinance.github.io/kubelet-csr-
   --version 1.2.13 --destination charts
 ```
 
-add `charts` to `download/.gitignore` so the tarballs stay out of the repo.
-
-the addon install scripts drop the `helm repo add` line and point at the
-tarball. in `control-plane/addons/csr-approver/install.sh`:
+update the addon install scripts:
 
 ```sh
+# control-plane/addons/csr-approver/install.sh
+#!/bin/sh
+set -e
+
 helm --namespace kube-system upgrade \
   --install kubelet-csr-approver ../../../download/charts/kubelet-csr-approver-1.2.13.tgz \
   --values values.yaml \
   --wait
 ```
 
-in `control-plane/addons/metrics-server/install.sh`:
-
 ```sh
+# control-plane/addons/metrics-server/install.sh
+#!/bin/sh
+set -e
+
 helm --namespace kube-system upgrade \
   --install metrics-server ../../../download/charts/metrics-server-3.14.0.tgz \
   --values values.yaml \
