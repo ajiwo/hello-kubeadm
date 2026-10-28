@@ -153,6 +153,7 @@ helm pull metrics-server --repo https://kubernetes-sigs.github.io/metrics-server
   --version 3.14.0 --destination charts
 helm pull kubelet-csr-approver --repo https://postfinance.github.io/kubelet-csr-approver \
   --version 1.2.13 --destination charts
+helm pull oci://quay.io/cilium/charts/cilium --version 1.20.4 --destination charts
 ```
 
 update the addon install scripts:
@@ -175,6 +176,20 @@ set -e
 
 helm --namespace kube-system upgrade \
   --install metrics-server ../../../download/charts/metrics-server-3.14.0.tgz \
+  --values values.yaml \
+  --wait
+```
+
+```sh
+# control-plane/addons/cilium/install.sh
+#!/bin/sh
+set -e
+
+# standard gateway-api v1.6.3 CRDs, cached locally
+kubectl apply -f gateway-crds.yaml
+
+helm --namespace kube-system upgrade \
+  --install cilium ../../../download/charts/cilium-1.20.4.tgz \
   --values values.yaml \
   --wait
 ```
