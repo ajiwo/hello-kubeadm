@@ -124,9 +124,6 @@ control-plane set (minus kube-proxy, skipped here). addons add their own:
 cilium, metrics-server, kubelet-csr-approver. workers need the images their pods
 run, at least `pause` for the sandbox and the cilium agent.
 
-`kubeadm config images list --kubernetes-version v1.37.1` prints the core
-preload set (minus kube-proxy, skipped here).
-
 `ctr -n k8s.io i ls` on an initialized node shows what actually landed,
 including digest-pinned cilium images (`sha256:` lines) and any example
 or test images deployed. filter to name:tag references:
