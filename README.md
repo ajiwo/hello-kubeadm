@@ -52,9 +52,8 @@ upstream only requires this for the control-plane endpoint, where kubeadm's
 ([upstream source](https://github.com/kubernetes/kubernetes/blob/v1.37.1/cmd/kubeadm/app/apis/kubeadm/v1beta4/types.go#L99)).
 node addresses are not covered by that wording. this setup needs them stable anyway:
 
-- the addresses are written into `control-plane/kubeadm-init.yaml`, `worker/kubeadm-join.yaml`,
-  `control-plane/addons/cilium/values.yaml` and the CoreDNS `hosts` block. a reassigned address
-  means editing all of them
+- the addresses are written into `control-plane/kubeadm-init.yaml`, `worker/kubeadm-join.yaml`
+  and `control-plane/addons/cilium/values.yaml`. a reassigned address means editing all of them
 - kubeadm adds the control-plane address to the apiserver serving cert SANs and writes the
   endpoint into every kubeconfig it generates. a moved control-plane IP surfaces as a cert
   hostname mismatch rather than a clear error
@@ -83,7 +82,6 @@ files with hardcoded values you'll need to change:
 | `control-plane/kubeadm-init.yaml:9` | `nodeRegistration.name` control-plane hostname |
 | `control-plane/kubeadm-init.yaml:36` | `controlPlaneEndpoint` control-plane endpoint |
 | `control-plane/kubeadm-init.yaml:41` | `serviceSubnet` |
-| `control-plane/patches/coredns.configmap.yaml:19-21` | hosts block your node IPs and hostnames |
 | `download/download.sh:5` | set to `amd64` for `x86_64` |
 | `worker/kubeadm-join.yaml:4,7,9-10,14,16` | node name, IP, cloud-provider (instance-4 only), token, CA hash |
 
@@ -175,7 +173,7 @@ this does, roughly, in order:
 2. generates encryption key at `/etc/kubernetes/enc/enc.yaml` (skips if exists)
 3. runs `kubeadm init` with `kubeadm-init.yaml` (skips the kube-proxy addon, Cilium replaces it)
 4. copies admin kubeconfig to `/root/.kube/config`
-5. patches CoreDNS (custom hosts, relaxed liveness probe)
+5. patches the CoreDNS deployment (relaxed liveness probe)
 6. installs Cilium CNI + Gateway API CRDs
 7. installs kubelet-csr-approver (auto-approves kubelet-serving CSRs)
 8. installs metrics-server via Helm

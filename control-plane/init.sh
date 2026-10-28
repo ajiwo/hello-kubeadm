@@ -19,7 +19,6 @@ kubeadm init --config "$DIR/kubeadm-init.yaml" --upload-certs 2>&1 | tee "$DIR/k
 mkdir -p /root/.kube
 cp -av /etc/kubernetes/admin.conf /root/.kube/config
 
-kubectl -n kube-system patch configmap coredns --patch-file "$DIR/patches/coredns.configmap.yaml"
 kubectl -n kube-system patch deployment coredns --patch-file "$DIR/patches/coredns.deployment.yaml"
 
 (cd "$DIR/addons/cilium" && ./install.sh)
