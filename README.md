@@ -11,7 +11,7 @@ kubernetes bootstrap using kubeadm on plain VMs. notes and snippets, not a turnk
 | containerd | v2.3.6 | control-plane + worker | runtime |
 | runc | v1.5.2 | control-plane + worker | |
 | Cilium CLI | v0.20.1 | control-plane | installs Cilium |
-| Cilium | v1.20.3 | control-plane + worker | CNI, replaces kube-proxy |
+| Cilium | v1.20.4 | control-plane + worker | CNI, replaces kube-proxy |
 | Gateway API | v1.6.3 CRDs | | standard profile via Cilium |
 | kubelet-csr-approver | v1.2.13 | | Helm chart |
 | metrics-server | v3.14.0 | | Helm chart |

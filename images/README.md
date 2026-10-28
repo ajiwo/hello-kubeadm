@@ -70,7 +70,7 @@ save on the machine with internet access:
 
 ```sh
 ref=quay.io/cilium/cilium-envoy
-tag=v1.38.6-1791537840-00e749f11f69334c625e53fc1ce2fc6c7f34a51f
+tag=v1.39.5-1792733054-8c73b2816bc8239e27f1fd53b271884688137459
 
 skopeo copy --override-os linux --override-arch arm64 \
   "docker://$ref:$tag" \
@@ -84,8 +84,8 @@ on each node, as root, run from `/root/hello-kubeadm`:
 
 ```sh
 ref=quay.io/cilium/cilium-envoy
-tag=v1.38.6-1791537840-00e749f11f69334c625e53fc1ce2fc6c7f34a51f
-digest=sha256:d6c8c0c91954d1885026d82a31b341f37dcd34a4b127fdaf1587e43ddd224cef
+tag=v1.39.5-1792733054-8c73b2816bc8239e27f1fd53b271884688137459
+digest=sha256:547ab45f6092f681d9f54f3be9fa8fb1e705c9c5dc2df388efe3a52aa6965629
 
 systemctl start containerd
 ctr -n k8s.io images import --platform linux/arm64 \

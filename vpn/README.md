@@ -4,7 +4,7 @@ optional. run the cluster's node IPs on a routed wireguard interface so nodes re
 wireguard server handling are assumed known (config provided as a hint). only covers what the cluster on top needs.
 
 this is plain wireguard for reachability, not cilium's wireguard encryption
-(`encryption.type=wireguard`, [upstream doc](https://github.com/cilium/cilium/blob/v1.20.3/Documentation/security/network/encryption-wireguard.rst)),
+(`encryption.type=wireguard`, [upstream doc](https://github.com/cilium/cilium/blob/v1.20.4/Documentation/security/network/encryption-wireguard.rst)),
 which the agent manages on its own `cilium_wg0` interface to transparently encrypt
 node-to-node traffic. `wg0` here is NetworkManager-managed and routed, and carries
 no cilium state. pick one, not both: `wg0` already encrypts the vxlan traffic
@@ -149,13 +149,13 @@ own routing table. that is the tunnel's only interaction with `wg0`.
 the `(Direct Routing)` marker names Cilium's direct routing device: the single
 device it uses to reach other cluster nodes, and whose address it borrows as the
 source IP for traffic it originates on behalf of a Service. BPF NodePort and host
-routing use it too ([source](https://github.com/cilium/cilium/blob/v1.20.3/pkg/datapath/tables/direct_routing_device.go#L27-L35)),
+routing use it too ([source](https://github.com/cilium/cilium/blob/v1.20.4/pkg/datapath/tables/direct_routing_device.go#L27-L35)),
 and its address is compiled into the datapath as `IPV4_DIRECT_ROUTING`
-([source](https://github.com/cilium/cilium/blob/v1.20.3/pkg/datapath/linux/config/config.go#L364-L372)).
+([source](https://github.com/cilium/cilium/blob/v1.20.4/pkg/datapath/linux/config/config.go#L364-L372)).
 
 when more than one device is detected, Cilium picks one
-([upstream source](https://github.com/cilium/cilium/blob/v1.20.3/Documentation/network/kubernetes/kubeproxy-free.rst#L1380-L1392),
-[selection source](https://github.com/cilium/cilium/blob/v1.20.3/pkg/datapath/tables/direct_routing_device.go#L61-L98)):
+([upstream source](https://github.com/cilium/cilium/blob/v1.20.4/Documentation/network/kubernetes/kubeproxy-free.rst?plain=1#L1380-L1392),
+[selection source](https://github.com/cilium/cilium/blob/v1.20.4/pkg/datapath/tables/direct_routing_device.go#L61-L99)):
 
 1. `nodePort.directRoutingDevice`, if set. not set here.
 2. the sole detected device, if only one. not the case, `enp0s6` and `wg0` are both listed.
@@ -168,7 +168,7 @@ moves there, with the same vxlan datapath and the same outer packets riding `wg0
 the device choice and the routing mode are separate knobs that happen to share a
 name. `enable-auto-direct-routing` is the datapath-level one, and it is refused
 outright when tunneling is on
-([source](https://github.com/cilium/cilium/blob/v1.20.3/daemon/cmd/daemon_main.go#L1067-L1069)),
+([source](https://github.com/cilium/cilium/blob/v1.20.4/daemon/cmd/daemon_main.go#L1067-L1069)),
 so it is off under `Tunnel [vxlan]`.
 
 ### gateway address
