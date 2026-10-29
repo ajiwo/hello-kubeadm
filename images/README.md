@@ -269,12 +269,10 @@ helm --namespace kube-system upgrade \
 
 ## conformance
 
-run sonobuoy conformance against the image-preloaded cluster:
+preload the sonobuoy images (listed in [sonobuoy-images.txt](sonobuoy-images.txt))
+on the nodes using the save/load steps above, then run conformance:
 
 ```sh
 sonobuoy run --mode=certified-conformance --force-image-pull-policy --image-pull-policy IfNotPresent
 ```
-
-`--force-image-pull-policy --image-pull-policy IfNotPresent` pulls sonobuoy images [sonobuoy-images.txt](sonobuoy-images.txt)
-from the node's local containerd instead of a registry.
 
