@@ -111,7 +111,7 @@ disable swap.
 
 if your VPS provider has a network security group (NSG), set it up before going further:
 allow 22/tcp from your own address, plus whatever ports you need yourself.
-nothing cluster-facing has to be open yet, the nodes only talk to each other over the private network.
+no cluster-facing ports need to be open yet; the nodes only talk to each other over the private network.
 leave outbound unrestricted, image pulls need it.
 
 the NSG and the host firewall below are separate gates, a quiet drop can come from either.
@@ -241,9 +241,8 @@ during the `mark-control-plane` phase
 so cilium nodeipam only advertises instance-4's IP for LoadBalancer services.
 
 `untaint-lb-worker.sh` removes the `node.cloudprovider.kubernetes.io/uninitialized`
-taint from instance-4. instance-4 joins with kubelet `cloud-provider=external`
-(uncomment it in `worker/kubeadm-join.yaml`), but no real CCM runs, so nothing
-clears the taint.
+taint from instance-4, which joins with kubelet `cloud-provider=external`
+(uncomment it in `worker/kubeadm-join.yaml`), because no real CCM runs to clear it.
 
 ## Reset
 
