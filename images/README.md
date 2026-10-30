@@ -227,6 +227,7 @@ helm pull metrics-server --repo https://kubernetes-sigs.github.io/metrics-server
 helm pull kubelet-csr-approver --repo https://postfinance.github.io/kubelet-csr-approver \
   --version 1.2.13 --destination charts
 helm pull oci://quay.io/cilium/charts/cilium --version 1.20.4 --destination charts
+helm pull oci://ghcr.io/spegel-org/helm-charts/spegel --version 0.8.1 --destination charts
 ```
 
 update the addon install scripts:
@@ -267,12 +268,42 @@ helm --namespace kube-system upgrade \
   --wait
 ```
 
+## spegel
+
+optional cluster-local registry mirror (peer to peer). see [spegel/README.md](spegel/README.md)
+for the full steps. summary:
+
+- containerd drop-in `images/spegel/spegel.toml` must be copied to
+  `/etc/containerd/conf.d/` on every participating node, during step 3 and
+  before init/join.
+- preload the spegel image with the digest-pinned flow (it is referenced by
+  digest in the chart), and pull the chart tarball with the command above.
+- install only after at least two nodes are `Ready`:
+  `cd images/spegel && ./install.sh`.
+
+conformance needs it on an offline cluster. two conformance tests hardcode
+`imagePullPolicy: Always` (ImageVolume, projected podCertificate mTLS), so kubelet
+asks a registry even when the image is already on the node, and preloading cannot
+satisfy them. without a reachable registry they fail (`Passed: 467, Failed: 2`).
+spegel answers that pull from a peer, which is what gets the run to
+`Passed: 469, Failed: 0`.
+
 ## conformance
 
 preload the sonobuoy images (listed in [sonobuoy-images.txt](sonobuoy-images.txt))
-on the nodes using the save/load steps above, then run conformance:
+on the nodes using the save/load steps above. with spegel running, preloading on
+one node is enough; the others pull from it.
+
+then run conformance:
 
 ```sh
-sonobuoy run --mode=certified-conformance --force-image-pull-policy --image-pull-policy IfNotPresent
+sonobuoy run --mode=certified-conformance
 ```
+
+without spegel or a reachable registry, two tests fail even with every image
+preloaded: the `ImageVolume` test and the projected podCertificate mTLS test. both
+set `imagePullPolicy: Always`, which bypasses the local image store, so kubelet
+asks a registry anyway. expect `Passed: 467, Failed: 2`; with spegel,
+`Passed: 469, Failed: 0`. `--force-image-pull-policy --image-pull-policy
+IfNotPresent` does not help here; it only applies to sonobuoy's own pods.
 

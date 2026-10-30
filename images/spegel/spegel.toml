@@ -1,0 +1,8 @@
+# /etc/containerd/conf.d/spegel.toml
+# opt-in: copy to /etc/containerd/conf.d/ on nodes that run Spegel.
+# Spegel needs containerd to keep unpacked layers and to know where
+# the registry mirror config lives (see images/README.md "spegel").
+[plugins."io.containerd.cri.v1.images".registry]
+  config_path = "/etc/containerd/certs.d"
+[plugins."io.containerd.cri.v1.images"]
+  discard_unpacked_layers = false

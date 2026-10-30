@@ -1,0 +1,3 @@
+# Spegel values. Defaults are fine for this cluster; keep mirroredRegistries
+# empty so every registry is mirrored. See
+# https://github.com/spegel-org/spegel/blob/v0.8.1/charts/spegel/values.yaml
