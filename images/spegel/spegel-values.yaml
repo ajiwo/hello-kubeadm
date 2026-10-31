@@ -1,3 +1,17 @@
-# Spegel values. Defaults are fine for this cluster; keep mirroredRegistries
+# Spegel values. The active values are the defaults; keep mirroredRegistries
 # empty so every registry is mirrored. See
 # https://github.com/spegel-org/spegel/blob/v0.8.1/charts/spegel/values.yaml
+#
+# two optional hardening knobs, commented out so the README "verify" step
+# works as written.
+
+#networkPolicy:
+#  # ingress only, and only narrows libp2p router traffic (5001 tcp/udp) to
+#  # spegel pods in this namespace. the registry (5000, nodePort 30020) and
+#  # metrics (9090) stay reachable from any source; see "notes" in README.md.
+#  enabled: true
+
+#spegel:
+#  # drops /debug/web from the :9090 listener. /metrics is unaffected, so
+#  # verify with the metrics endpoint instead of the page.
+#  debugWebEnabled: false

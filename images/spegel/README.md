@@ -69,8 +69,9 @@ cd images/spegel
 ```
 
 `install.sh` installs from `../../download/charts/spegel-0.8.1.tgz` with
-`spegel-values.yaml`. values are all defaults; `mirroredRegistries` is left
-empty so every registry is mirrored.
+`spegel-values.yaml`. the active values are the defaults; `mirroredRegistries`
+is left empty so every registry is mirrored. two hardening knobs are commented
+out in the file.
 
 ## verify
 
@@ -90,7 +91,8 @@ kubectl --namespace spegel port-forward <spegel-pod-on-second-node> 9090
 pull never went through spegel, ie. the containerd config is wrong.
 
 the debug page loads htmx from unpkg.com, so the stats box needs internet on the
-browser. without it, read the same value from the metrics endpoint:
+browser. with `spegel.debugWebEnabled: false` the page is not registered at all.
+either way, the same value is on the metrics endpoint:
 
 ```sh
 curl -s localhost:9090/metrics | grep spegel_mirror_last_success_timestamp_seconds
@@ -105,6 +107,10 @@ curl -s localhost:9090/metrics | grep spegel_mirror_last_success_timestamp_secon
   firewall; a wider source range lets anyone pull anything in that node's
   content store. if a wider audience is intended, set `basicAuthSecretName` in
   the values.
+- `networkPolicy.enabled: true` (commented out in the values) limits the libp2p
+  router (5001 tcp/udp) to spegel pods in the namespace. the registry
+  (5000/30020) and metrics (9090) stay open to any source, so the firewall
+  advice above still applies.
 - `containerdMirrorAdd: true` (default) makes spegel write the mirror config
   into `/etc/containerd/certs.d` itself. `prependExisting` is false, so it
   replaces rather than appends.
