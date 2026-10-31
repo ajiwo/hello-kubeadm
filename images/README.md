@@ -68,8 +68,8 @@ on a machine with internet access:
 
 ```sh
 skopeo copy --override-os linux --override-arch arm64 \
-  docker://registry.k8s.io/kube-apiserver:v1.37.1 \
-  docker-archive:images/dist/registry.k8s.io_kube-apiserver_v1.37.1.tar:registry.k8s.io/kube-apiserver:v1.37.1
+  docker://registry.k8s.io/kube-apiserver:v1.37.2 \
+  docker-archive:images/dist/registry.k8s.io_kube-apiserver_v1.37.2.tar:registry.k8s.io/kube-apiserver:v1.37.2
 ```
 
 value after the second colon = image name stored in the archive. keep identical
@@ -83,7 +83,7 @@ or `worker/join.sh` (step 5):
 ```sh
 systemctl start containerd
 ctr -n k8s.io images import --platform linux/arm64 \
-  images/dist/registry.k8s.io_kube-apiserver_v1.37.1.tar
+  images/dist/registry.k8s.io_kube-apiserver_v1.37.2.tar
 ```
 
 check it landed:
@@ -106,8 +106,8 @@ index digest the chart references.
 containerd resolves references by literal string. the CRI `LocalResolve`
 function runs them through `ParseDockerRef`, which drops the tag from a tag+digest
 reference, leaving `quay.io/cilium/cilium-envoy@sha256:d6c8...` as the lookup name
-([normalize.go](https://github.com/containerd/containerd/blob/v2.3.6/vendor/github.com/distribution/reference/normalize.go#L107-L121),
-[service.go](https://github.com/containerd/containerd/blob/v2.3.6/internal/cri/server/images/service.go#L158-L178)).
+([normalize.go](https://github.com/containerd/containerd/blob/v2.3.7/vendor/github.com/distribution/reference/normalize.go#L107-L121),
+[service.go](https://github.com/containerd/containerd/blob/v2.3.7/internal/cri/server/images/service.go#L158-L178)).
 the node needs an image entry with that name. the name is a lookup key; the entry
 points at the imported manifest, whose digest differs.
 
@@ -189,7 +189,7 @@ for a digest.
 
 ## repeating
 
-`kubeadm config images list --kubernetes-version v1.37.1` prints the
+`kubeadm config images list --kubernetes-version v1.37.2` prints the
 control-plane set (minus kube-proxy, skipped here). the addons pull their own;
 enumerate those with the render command under "which images a chart deploys".
 

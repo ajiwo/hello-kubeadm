@@ -65,7 +65,7 @@ the flag is required. kubeadm's `ExternalEtcdVersion` preflight does an HTTP `GE
 serves gRPC only on :2379 and has no `/version` handler since
 [f2d9e5d](https://github.com/k3s-io/kine/commit/f2d9e5d0c6a04604c5e0089df664adde21433de6), so the check fails with
 `Get "https://<host>:2379/version": EOF`. `--ignore-preflight-errors=ExternalEtcdVersion` demotes this to a
-warning ([source](https://github.com/kubernetes/kubernetes/blob/v1.37.1/cmd/kubeadm/app/preflight/checks.go#L760-L788));
+warning ([source](https://github.com/kubernetes/kubernetes/blob/v1.37.2/cmd/kubeadm/app/preflight/checks.go#L760-L788));
 it does not affect kube-apiserver's gRPC access to kine.
 
 query the kine endpoint directly with the host-side `etcdctl` from the download step:
@@ -88,7 +88,7 @@ certified versions ([source](https://github.com/k3s-io/docs/raw/f6d5b17d97e51607
 - etcd 3.5.21
 
 **Watch out:**
-- init still prints `[WARNING ExternalEtcdVersion]: Get "...": EOF`. the flag demotes the error to a warning instead of suppressing it ([source](https://github.com/kubernetes/kubernetes/blob/v1.37.1/cmd/kubeadm/app/preflight/checks.go#L1212-L1216)). expected, not a second failure
+- init still prints `[WARNING ExternalEtcdVersion]: Get "...": EOF`. the flag demotes the error to a warning instead of suppressing it ([source](https://github.com/kubernetes/kubernetes/blob/v1.37.2/cmd/kubeadm/app/preflight/checks.go#L1212-L1216)). expected, not a second failure
 - the ignore is safe only while that check stays a version floor. if kubeadm adds real compatibility probing to it, drop the flag and re-read the reasoning above
 - stick to the certified versions above, unsupported versions can cause compaction failures and other issues ([kine#745](https://github.com/k3s-io/kine/issues/745))
 - connection poolers like PgBouncer need extra config for prepared statements

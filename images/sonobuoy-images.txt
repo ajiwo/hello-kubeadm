@@ -1,8 +1,8 @@
 docker.io/sonobuoy/sonobuoy:v0.57.5
-registry.k8s.io/conformance:v1.37.1
+registry.k8s.io/conformance:v1.37.2
 docker.io/sonobuoy/systemd-logs:v0.4
 
-registry.k8s.io/build-image/distroless-iptables:v0.9.7
+registry.k8s.io/build-image/distroless-iptables:v0.9.9
 registry.k8s.io/cloud-provider-gcp/gcp-compute-persistent-disk-csi-driver:v1.4.0
 registry.k8s.io/e2e-test-images/agnhost:2.55
 registry.k8s.io/e2e-test-images/agnhost:2.66.1

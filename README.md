@@ -6,9 +6,9 @@ kubernetes bootstrap using kubeadm on plain VMs. notes and snippets, not a turnk
 
 | Component | Version | Installs on | Notes |
 |---|---|---|---|
-| kubeadm / kubelet | v1.37.1 | control-plane + worker | |
-| kubectl | v1.37.1 | control-plane | client binary |
-| containerd | v2.3.6 | control-plane + worker | runtime |
+| kubeadm / kubelet | v1.37.2 | control-plane + worker | |
+| kubectl | v1.37.2 | control-plane | client binary |
+| containerd | v2.3.7 | control-plane + worker | runtime |
 | runc | v1.5.2 | control-plane + worker | |
 | Cilium CLI | v0.20.1 | control-plane | installs Cilium |
 | Cilium | v1.20.4 | control-plane + worker | CNI, replaces kube-proxy |
@@ -49,7 +49,7 @@ or with a DHCP reservation. a lease that can be reassigned is not enough.
 
 upstream only requires this for the control-plane endpoint, where kubeadm's
 `controlPlaneEndpoint` "sets a stable IP address or DNS name for the control plane"
-([upstream source](https://github.com/kubernetes/kubernetes/blob/v1.37.1/cmd/kubeadm/app/apis/kubeadm/v1beta4/types.go#L99)).
+([upstream source](https://github.com/kubernetes/kubernetes/blob/v1.37.2/cmd/kubeadm/app/apis/kubeadm/v1beta4/types.go#L99)).
 node addresses are not covered by that wording. this setup needs them stable anyway:
 
 - the addresses are written into `control-plane/kubeadm-init.yaml`, `worker/kubeadm-join.yaml`
@@ -57,8 +57,8 @@ node addresses are not covered by that wording. this setup needs them stable any
 - kubeadm adds the control-plane address to the apiserver serving cert SANs and writes the
   endpoint into every kubeconfig it generates. a moved control-plane IP surfaces as a cert
   hostname mismatch rather than a clear error
-  ([SANs](https://github.com/kubernetes/kubernetes/blob/v1.37.1/cmd/kubeadm/app/phases/certs/doc.go#L25),
-  [kubeconfig](https://github.com/kubernetes/kubernetes/blob/v1.37.1/cmd/kubeadm/app/phases/kubeconfig/kubeconfig.go#L334)).
+  ([SANs](https://github.com/kubernetes/kubernetes/blob/v1.37.2/cmd/kubeadm/app/phases/certs/doc.go#L25),
+  [kubeconfig](https://github.com/kubernetes/kubernetes/blob/v1.37.2/cmd/kubeadm/app/phases/kubeconfig/kubeconfig.go#L334)).
 - `InternalIP` is the address of record for a node. the control plane, the Service datapath
   and Cilium's nodeipam all read it from the Node object instead of rediscovering the node.
   kubelet rebuilds `status.addresses` on every sync, so on instance-2 and instance-3 the Node
@@ -66,7 +66,7 @@ node addresses are not covered by that wording. this setup needs them stable any
   kubelet `cloud-provider=external`, where kubelet returns early once the addresses are set and
   expects a cloud controller manager to take over. no CCM runs here, so its Node object stays
   frozen on the old address
-  ([upstream source](https://github.com/kubernetes/kubernetes/blob/v1.37.1/pkg/kubelet/nodestatus/setters.go#L118-L125)).
+  ([upstream source](https://github.com/kubernetes/kubernetes/blob/v1.37.2/pkg/kubelet/nodestatus/setters.go#L118-L125)).
 
 ## Adapting to your environment
 
@@ -116,9 +116,9 @@ leave outbound unrestricted, image pulls need it.
 
 the NSG and the host firewall below are separate gates, a quiet drop can come from either.
 
-disable the host firewall. if you know what you're doing, you can keep it enabled by opening the right ports and source/dest ranges ([upstream source](https://github.com/kubernetes/website/raw/4172569f6a2f95e0f2da3bafc12b05720cb5c498/content/en/docs/reference/networking/ports-and-protocols.md)).
+disable the host firewall. if you know what you're doing, you can keep it enabled by opening the right ports and source/dest ranges ([upstream source](https://github.com/kubernetes/website/raw/be44f0fb4230bec1dd3e0ecce420fb52ab8faea3/content/en/docs/reference/networking/ports-and-protocols.md)).
 
-set SELinux to permissive. effectively off, needed until kubelet SELinux support improves, since some CNI plugins need containers to reach the host filesystem. if you know what you're doing, you can leave it enforcing and do the labeling yourself ([upstream source](https://github.com/kubernetes/website/blob/4172569f6a2f95e0f2da3bafc12b05720cb5c498/content/en/docs/setup/production-environment/tools/kubeadm/install-kubeadm.md?plain=1#L279-L286)).
+set SELinux to permissive. effectively off, needed until kubelet SELinux support improves, since some CNI plugins need containers to reach the host filesystem. if you know what you're doing, you can leave it enforcing and do the labeling yourself ([upstream source](https://github.com/kubernetes/website/blob/be44f0fb4230bec1dd3e0ecce420fb52ab8faea3/content/en/docs/setup/production-environment/tools/kubeadm/install-kubeadm.md?plain=1#L279-L286)).
 
 ### 2. Download binaries
 
@@ -236,7 +236,7 @@ control-plane/untaint-lb-worker.sh instance-4
 
 kubeadm already labels instance-2 `node.kubernetes.io/exclude-from-external-load-balancers`
 during the `mark-control-plane` phase
-([source](https://github.com/kubernetes/kubernetes/blob/v1.37.1/cmd/kubeadm/app/phases/markcontrolplane/markcontrolplane.go#L30-L33)).
+([source](https://github.com/kubernetes/kubernetes/blob/v1.37.2/cmd/kubeadm/app/phases/markcontrolplane/markcontrolplane.go#L30-L33)).
 `exclude-lb.sh` applies the same label to the workers that are not externally reachable,
 so cilium nodeipam only advertises instance-4's IP for LoadBalancer services.
 

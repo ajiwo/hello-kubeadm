@@ -1,2 +1,2 @@
-https://github.com/kubernetes/website/blob/4172569f6a2f95e0f2da3bafc12b05720cb5c498/content/en/docs/setup/production-environment/tools/kubeadm/high-availability.md
+https://github.com/kubernetes/website/blob/be44f0fb4230bec1dd3e0ecce420fb52ab8faea3/content/en/docs/setup/production-environment/tools/kubeadm/high-availability.md
 https://github.com/kubernetes/kubeadm/blob/5bc6d39ca9ad65a5dc549dc388c80894044cf9af/docs/ha-considerations.md

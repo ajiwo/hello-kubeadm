@@ -41,7 +41,7 @@ control-plane count odd, etcd needs a majority to make progress.
 `kapisrv.lb.example.com` stands in for the load balancer address. this setup needs a name
 here: the step below resolves it per node.
 upstream docs on the kube-apiserver load balancer
-([source](https://github.com/kubernetes/website/blob/4172569f6a2f95e0f2da3bafc12b05720cb5c498/content/en/docs/setup/production-environment/tools/kubeadm/high-availability.md?plain=1#L125-L143)).
+([source](https://github.com/kubernetes/website/blob/be44f0fb4230bec1dd3e0ecce420fb52ab8faea3/content/en/docs/setup/production-environment/tools/kubeadm/high-availability.md?plain=1#L125-L143)).
 kubeadm writes it into every kubeconfig it generates, so workers and kubelets follow the
 same endpoint.
 
@@ -65,12 +65,12 @@ this is not HA while the entry is static: every node follows one control-plane, 
 one going down takes the name with it. it only gets you through bootstrap.
 
 kubelet gives a hostNetwork pod the node's `/etc/hosts`
-([source](https://github.com/kubernetes/kubernetes/blob/v1.37.1/pkg/kubelet/kubelet_pods.go#L497-L504)),
+([source](https://github.com/kubernetes/kubernetes/blob/v1.37.2/pkg/kubelet/kubelet_pods.go#L497-L504)),
 so the cilium agent resolves it too.
 
 kubeadm adds this name and each node's own advertise address and name to the apiserver
 serving certs
-([source](https://github.com/kubernetes/kubernetes/blob/v1.37.1/cmd/kubeadm/app/util/pkiutil/pki_helpers.go#L384-L424)),
+([source](https://github.com/kubernetes/kubernetes/blob/v1.37.2/cmd/kubeadm/app/util/pkiutil/pki_helpers.go#L384-L424)),
 so `certSANs` needs an entry only for a name or IP you reach the apiservers by that is
 not one of those.
 
@@ -132,7 +132,7 @@ kubectl -n kube-system rollout restart deployment coredns
 
 the CoreDNS replicas tolerate the control-plane taint and spread once more than one
 control-plane is schedulable
-([source](https://github.com/kubernetes/website/blob/4172569f6a2f95e0f2da3bafc12b05720cb5c498/content/en/docs/setup/production-environment/tools/kubeadm/high-availability.md?plain=1#L267-L271)).
+([source](https://github.com/kubernetes/website/blob/be44f0fb4230bec1dd3e0ecce420fb52ab8faea3/content/en/docs/setup/production-environment/tools/kubeadm/high-availability.md?plain=1#L267-L271)).
 
 ## verification
 

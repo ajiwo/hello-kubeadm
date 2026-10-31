@@ -5,8 +5,8 @@ set -e
 ARCH="arm64"
 
 # version pins
-CONTAINERD_TAG="v2.3.6"
-K8S_TAG="v1.37.1"
+CONTAINERD_TAG="v2.3.7"
+K8S_TAG="v1.37.2"
 SCRIPT_TAG="v0.16.2"
 CILIUM_TAG="v0.20.1"
 HELM_TAG="v4.2.3"
