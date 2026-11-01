@@ -301,8 +301,11 @@ sonobuoy run --mode=certified-conformance
 ```
 
 without spegel or a reachable registry, two tests fail even with every image
-preloaded: the `ImageVolume` test and the projected podCertificate mTLS test. both
-set `imagePullPolicy: Always`, which bypasses the local image store, so kubelet
+preloaded:
+- ImageVolume [test](https://github.com/kubernetes/kubernetes/blob/v1.37.2/test/e2e/common/node/image_volume.go#L112)
+- projected podCertificate mTLS [test](https://github.com/kubernetes/kubernetes/blob/v1.37.2/test/e2e/auth/projected_podcertificate.go#L488)
+
+both set `imagePullPolicy: Always`, which bypasses the local image store, so kubelet
 asks a registry anyway. expect `Passed: 467, Failed: 2`; with spegel,
 `Passed: 469, Failed: 0`. `--force-image-pull-policy --image-pull-policy
 IfNotPresent` does not help here; it only applies to sonobuoy's own pods.
