@@ -1,2 +1,3 @@
 https://github.com/kubernetes/website/blob/be44f0fb4230bec1dd3e0ecce420fb52ab8faea3/content/en/docs/setup/production-environment/tools/kubeadm/high-availability.md
 https://github.com/kubernetes/kubeadm/blob/5bc6d39ca9ad65a5dc549dc388c80894044cf9af/docs/ha-considerations.md
+https://github.com/etcd-io/website/blob/0c82d2741684f33834075552a0106de7d9346764/content/en/docs/v3.7/op-guide/runtime-configuration.md

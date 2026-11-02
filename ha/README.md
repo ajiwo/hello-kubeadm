@@ -22,8 +22,8 @@ the join path needs `--upload-certs` on the first `kubeadm init`, which
 | instance-5 | 10.9.8.5 | control-plane | no |
 | instance-6 | 10.9.8.6 | control-plane | no |
 
-prep instance-5 and instance-6 like any node, steps 1-3 of the main README. keep the
-control-plane count odd, etcd needs a majority to make progress.
+prep `instance-5` and `instance-6` like any node, steps 1-3 of the main README.
+keep the control-plane count odd, etcd needs a majority to make progress.
 
 ## adapting
 
@@ -55,7 +55,7 @@ first control-plane can init and the rest can join one that is already up:
 | instance-6 | `10.9.8.5 kapisrv.lb.example.com` | joins the second control-plane |
 | instance-3, instance-4 | `10.9.8.6 kapisrv.lb.example.com` | joins the last control-plane |
 
-the table assumes workers join last, after instance-6 is up. if you join them
+the table assumes workers join last, after `instance-6` is up. if you join them
 earlier, point them at whichever control-plane is already up.
 
 `init.sh` runs kubectl against the endpoint right after init, so the entry has to be in
@@ -153,3 +153,69 @@ to confirm the endpoint survives a control-plane failure, run kubectl against th
 balancer name on 6443 (or point your kubeconfig at it), disrupt one control-plane, then
 retry kubectl. a successful response means the load balancer dropped the dead backend and
 the remaining control-planes still answer.
+
+## remove a control-plane
+
+a control-plane node is also an etcd member. losing etcd quorum locks the
+cluster, so remove the member from etcd first, while quorum is still healthy,
+then clean up the node.
+
+example removing `instance-5`
+
+1. drain the node:
+
+```sh
+kubectl drain instance-5 --delete-emptydir-data --ignore-daemonsets
+```
+
+2. remove `instance-5` from the etcd member list. exec into a healthy etcd
+pod (not the one being removed). the etcd static pod is named `etcd-<node>`,
+its container is `etcd`, and the certs are in `/etc/kubernetes/pki/etcd/`:
+
+```sh
+kubectl -n kube-system exec etcd-instance-2 -c etcd -- etcdctl \
+  --endpoints=https://127.0.0.1:2379 \
+  --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+  --cert=/etc/kubernetes/pki/etcd/server.crt \
+  --key=/etc/kubernetes/pki/etcd/server.key \
+  member list
+```
+
+note the member id for `instance-5`, then remove it:
+
+```sh
+kubectl -n kube-system exec etcd-instance-2 -c etcd -- etcdctl \
+  --endpoints=https://127.0.0.1:2379 \
+  --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+  --cert=/etc/kubernetes/pki/etcd/server.crt \
+  --key=/etc/kubernetes/pki/etcd/server.key \
+  member remove <member-id>
+```
+
+3. on `instance-5`:
+
+```sh
+kubeadm reset -f
+```
+
+kubeadm reset runs the remove-etcd-member phase and tries to deregister the
+node from etcd automatically, but it can fail. when it fails it tells you
+to remove the member manually with etcdctl. step 2 already did that, so
+the reset only cleans the local etcd data dir.
+
+if you skipped step 2 and kubeadm reset failed to deregister, remove the
+member with etcdctl before continuing, or the cluster loses quorum.
+
+4. delete the node object:
+
+```sh
+kubectl delete node instance-5
+```
+
+5. deal with `instance-5`. wipe it for reuse (the reset cleanup in the main
+README, plus `rm -rf /var/lib/etcd /etc/kubernetes`) or destroy the VM if
+it is unused.
+
+etcd needs a majority to make progress. do not remove more control-planes
+than the cluster can lose while keeping a quorum.
+
