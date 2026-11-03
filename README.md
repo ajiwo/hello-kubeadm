@@ -467,7 +467,7 @@ on the control-plane plus every worker.
 
 ## Optional
 
-more advanced overlays. each one changes part of the workflow above.
+overlays for specific setups. each one changes part of the workflow above.
 
 ### kine
 
