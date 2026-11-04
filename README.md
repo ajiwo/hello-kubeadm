@@ -153,6 +153,7 @@ cp -a download/dist/usr/local/. /usr/local/
 cp -a download/dist/etc/systemd/system/. /etc/systemd/system/
 cp -a etc/. /etc/
 systemctl daemon-reload
+sysctl --system
 ```
 
 this puts the binaries in `/usr/local/bin/` and `/usr/local/libexec/cni/bin/`, the kubelet and containerd units in `/etc/systemd/system/`, and the module, sysctl, and containerd configs under `/etc/`.
