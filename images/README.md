@@ -289,6 +289,68 @@ preload the sonobuoy images (listed in [sonobuoy-images.txt](sonobuoy-images.txt
 on the nodes using the save/load steps above. with spegel running, preloading on
 one node is enough; the others pull from it.
 
+Warm up Spegel first.
+
+```yaml
+# warmup.yaml
+#
+# first rollout may take up to 5 minutes to reach 'Running' state and may show a
+# transient `ImagePullBackOff` while the mirror catches up.
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: warmup
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: warmup
+  template:
+    metadata:
+      labels:
+        app: warmup
+    spec:
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 0
+      initContainers:
+        - name: systemd-logs
+          image: docker.io/sonobuoy/systemd-logs:v0.4
+          imagePullPolicy: Always
+          command: ["/bin/sh", "-c", "true"]
+        - name: sonobuoy-worker
+          image: docker.io/sonobuoy/sonobuoy:v0.57.5
+          imagePullPolicy: Always
+          command: ["/sonobuoy", "version"]
+      containers:
+        - name: kitten
+          image: registry.k8s.io/e2e-test-images/kitten:1.8
+          imagePullPolicy: Always
+          command: ["/agnhost", "pause"]
+        - name: agnhost-prev
+          image: registry.k8s.io/e2e-test-images/agnhost:2.55
+          imagePullPolicy: Always
+          command: ["/agnhost", "pause"]
+        - name: agnhost
+          image: registry.k8s.io/e2e-test-images/agnhost:2.66.1
+          imagePullPolicy: Always
+          command: ["/agnhost", "pause"]
+      tolerations:
+        - effect: NoSchedule
+          operator: Exists
+```
+
+run it and check:
+
+```sh
+kubectl apply -f warmup.yaml
+kubectl rollout status ds/warmup
+kubectl get pods -l app=warmup -o wide       # one per node, all Running
+```
+
+`kubectl delete -f warmup.yaml` when done, the images stay in the content
+store.
+
 then run conformance:
 
 ```sh
