@@ -281,12 +281,7 @@ for the full steps. summary:
 - install only after at least two nodes are `Ready`:
   `cd images/spegel && ./install.sh`.
 
-conformance needs it on an offline cluster. two conformance tests hardcode
-`imagePullPolicy: Always` (ImageVolume, projected podCertificate mTLS), so kubelet
-asks a registry even when the image is already on the node, and preloading cannot
-satisfy them. without a reachable registry they fail (`Passed: 467, Failed: 2`).
-spegel answers that pull from a peer, which is what gets the run to
-`Passed: 469, Failed: 0`.
+conformance needs it on an offline cluster (details below).
 
 ## conformance
 
