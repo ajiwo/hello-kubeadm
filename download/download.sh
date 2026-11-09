@@ -61,7 +61,7 @@ curl -sSLO "https://github.com/containerd/containerd/raw/refs/tags/${CONTAINERD_
 # kine: not needed by default. uncomment to get the kine binary in
 # ${DESTDIR}/bin, for a SQL-backed datastore instead of etcd
 # (see kine/README.md).
-#KINE_TAG="v0.17.2"
+#KINE_TAG="v0.17.5"
 #curl -sSLO "https://github.com/k3s-io/kine/releases/download/${KINE_TAG}/kine-${ARCH}"
 #curl -sSLO "https://github.com/k3s-io/kine/releases/download/${KINE_TAG}/sha256sum-${ARCH}.txt"
 #sha256sum -c "sha256sum-${ARCH}.txt"

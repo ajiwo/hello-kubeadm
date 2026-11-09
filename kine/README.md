@@ -80,7 +80,7 @@ etcdctl --endpoints=https://10.9.8.2:2379 \
 
 ## Supported databases
 
-certified versions ([source](https://github.com/k3s-io/docs/raw/f6d5b17d97e5160706ed56c405b6b17cf9d826af/docs/datastore/datastore.md)):
+certified versions ([source](https://github.com/k3s-io/docs/raw/039b58ca728e337cd6e22cc6fefc345da7c1af12/docs/datastore/datastore.md)):
 
 - PostgreSQL 15.12, 16.7, 17.3
 - MySQL 8.0, 8.4
