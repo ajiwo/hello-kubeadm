@@ -412,7 +412,7 @@ runs the upstream e2e tests tagged `[Conformance]`, the subset CNCF requires for
 it verifies this cluster implements the documented Kubernetes API and behaviour for the stable feature set:
 API semantics, kubelet and node lifecycle, scheduling, the workload controllers, Service/DNS/pod networking,
 service accounts, and the volume types that need no CSI driver.
-the run takes about 2 hours on this size of cluster
+the run needs at least 2 schedulable nodes and takes about 2 hours on this size of cluster
 
 ```sh
 sonobuoy run --mode=certified-conformance
